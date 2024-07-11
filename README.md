@@ -19,7 +19,7 @@
 
 - Install dependencies using `npm`
 ```bash
-    cd Symptom-Checker-frontend
+    cd Symptom-Checker-frontend/symptom-checker-frontend
     npm install
 ```
 
