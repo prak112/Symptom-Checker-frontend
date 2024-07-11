@@ -14,12 +14,12 @@
 
 - Clone the project
 ```bash
-    git clone <project-url>
+    git clone https://github.com/prak112/Symptom-Checker-frontend.git
 ```
 
 - Install dependencies using `npm`
 ```bash
-    cd <project-directory>
+    cd Symptom-Checker-frontend
     npm install
 ```
 
