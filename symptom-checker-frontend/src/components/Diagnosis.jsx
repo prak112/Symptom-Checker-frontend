@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 //import { createTheme } from '@mui/material/styles';
 
 export default function Diagnosis() {
+  // center and border style
   const cardStyle = {
     display: 'flex',
     flexDirection: 'column',
@@ -31,8 +32,6 @@ export default function Diagnosis() {
   //     },
   //   },
   // });
-
-
 
   return (
     <Card variant="outlined" sx={cardStyle}>
