@@ -11,11 +11,19 @@ export default function Header({ toggleDrawer }){
     return(
         <AppBar position="relative" sx={gradientStyle} >
             <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
-                    <MenuIcon />
+                <IconButton 
+                    edge="start" 
+                    color="inherit" 
+                    aria-label="menu" 
+                    onClick={toggleDrawer}
+                >
+                    <MenuIcon fontSize='large' />
                 </IconButton>
-                <Typography variant="h5" align="justify">
-                    <img src={Logo} alt='Logo' width={75} height={75} style={{padding: 10, margin: 0}}/> Symptom Checker
+                <img src={Logo} alt='Logo' 
+                    width={75} height={75} 
+                    style={{paddingRight: '50px', paddingLeft: '25px'}}/> 
+                <Typography variant="h5" align='justify'>
+                    Symptom Checker
                 </Typography>
             </Toolbar>
         </AppBar>
