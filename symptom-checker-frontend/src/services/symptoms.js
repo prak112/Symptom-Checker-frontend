@@ -1,22 +1,11 @@
 import axios from 'axios'
 
-const baseUrl = '/api/symptoms'
+const baseUrl = '/api/protected/symptoms'
 
-// POST - short list of symptoms
-const getQuickDiagnosis = async(symptoms) => {
+// POST - 'Specific' search result from symptoms lists
+const getSpecificDiagnosis = async(symptomsList) => {
     try {
-        const response = await axios.post(baseUrl, symptoms)
-        return response.data
-    } catch (error) {
-        console.error(error)
-        throw error;
-    }
-} 
-
-// POST - long list of symptoms
-const getDetailedDiagnosis = async(symptoms) => {
-    try {
-        const response = await axios.post(baseUrl, symptoms)
+        const response = await axios.post(baseUrl, symptomsList)
         return response.data
     } catch (error) {
         console.error(error)
@@ -24,4 +13,15 @@ const getDetailedDiagnosis = async(symptoms) => {
     }
 }
 
-export default { getQuickDiagnosis, getDetailedDiagnosis }
+// POST - 'General' search result from symptoms lists
+const getGeneralDiagnosis = async(symptomsList) => {
+    try {
+        const response = await axios.post(baseUrl, symptomsList)
+        return response.data
+    } catch (error) {
+        console.error(error)
+        throw error;
+    }
+}
+
+export default { getSpecificDiagnosis, getGeneralDiagnosis }
