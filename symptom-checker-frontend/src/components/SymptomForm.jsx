@@ -9,8 +9,9 @@ import symptomsService from "../services/symptoms"
 export default function SymptomForm(){
     const [loading, setLoading] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    const [symptoms, setSymptoms] = useState('')
-    
+    const [symptoms, setSymptoms] = useState([])
+    const [diagnosis, setDiagnosis] = useState(null)
+
     // center and border style
     const boxStyle = {
         display: 'flex',
@@ -26,10 +27,15 @@ export default function SymptomForm(){
     }
     
     // manage loading and submitted states
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         event.preventDefault()
-        setLoading(true) 
-        symptomsService.getQuickDiagnosis(symptoms)
+        setLoading(true)
+        const symptomsPayload = { 
+            symptoms: symptoms
+         }
+        const diagnosisData = await symptomsService.getSpecificDiagnosis(symptomsPayload)
+        setDiagnosis(diagnosisData)
+
         setTimeout(() => {
             setLoading(false)
             setSubmitted(true)
@@ -44,7 +50,7 @@ export default function SymptomForm(){
     // form-level validation
 
 
-    // loading true, submitted false - render Loading screen
+    // render Loading screen - loading true, submitted false
     if(loading){
         return (
         <Box sx={boxStyle}>
@@ -53,11 +59,41 @@ export default function SymptomForm(){
         </Box>
         )
     }
-    // loading false, submitted true - render Diagnosis    
+
+/**
+ * SETUP Radio Button for 'General'/'Specific' search of symptoms
+ */
+
+    // render Diagnosis in Card - loading false, submitted true
+    /** render 'General' search = destinationEntities-->MatchingPVs-->label, score, foundationUri
+     * Chip - diagnosisLabel - <div>label</div> 
+     * Chip - diagnosisScore - <div>score</div>
+     * Stack - diagnosisDetail - 
+        * foundationUri LookUp = browserUrl, title["@value"], definition["@value"], longDefinition["@value"]
+        * Button text - <div>Read More on ICD-11</div>
+        * Route - Link to={browserUrl}
+        * Box-Typography- 
+            * title["@value"] - dark text, 
+            * definition["@value"] - light text, 
+            * if available, longDefinition["@value"] - fading text 
+    **/
+    /** render 'Specific' search = searchText, matchText, foundationUri, matchScore
+     * Chip - diagnosisLabel - <div>matchText</div> 
+     * Chip - diagnosisScore - <div>matchScore</div>
+     * Stack - diagnosisDetail -  
+        * foundationUri LookUp = browserUrl, title["@value"], definition["@value"], longDefinition["@value"]
+        * same as for 'General' search
+    **/ 
+
     if(submitted){
         return(
             <>
-            <Diagnosis />
+            <Diagnosis
+                label={diagnosis.label} 
+                score={diagnosis.score}
+                url={diagnosis.url}
+                title={diagnosis.title}
+                detail={diagnosis.detail} />
             <Button 
                 component={Link} to="/" 
                 endIcon={<ArrowBack />} 
@@ -71,7 +107,7 @@ export default function SymptomForm(){
     }
     return(        
         <Box sx={boxStyle}>
-            {/* by default, loading false, submitted false - render Form */}
+            {/* render Symptom Form - by default, loading false, submitted false */}
             <h3 style={{textAlign: 'center'}}>List Symptoms briefly</h3>
             <form onSubmit={handleSubmit}>
                 <TextField 
