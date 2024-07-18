@@ -48,22 +48,24 @@ export default function Diagnosis({ label, score, url, title, detail }) {
     <Card variant="outlined" sx={cardStyle}>
       <Box sx={{ p: 2 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography color='ActiveCaption' gutterBottom variant="h5" component="div">
             {label}
           </Typography>
           <Typography gutterBottom variant="h6" component="div">
-            Diagnosis Score : {+score * 100}%
+            Diagnosis Score : {Math.round((+score * 100), 2)}%
           </Typography>
         </Stack>
-        <Typography color='InfoText' >
-          {title}
-        </Typography>
-        <Typography color="text.secondary" variant="body2">
-          {detail}
-        </Typography>
-        <Button variant='outlined' href={url}>
-          Read More on ICD-11
-        </Button>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography color='CaptionText' >
+            {title}
+          </Typography>
+          <Typography color='GrayText' variant="body2">
+            {detail}
+          </Typography>
+          <Button variant='outlined' href={url}>
+            Read More on ICD-11
+          </Button>
+        </Stack>
       </Box>
       <Divider />
       
@@ -84,10 +86,3 @@ export default function Diagnosis({ label, score, url, title, detail }) {
     </Card>
   );
 }
-
-
-/** How to pass diagnosis data from SymptomForm.jsx returned from backend API to Diagnosis.jsx ---
- *  Set state variable to handle data from symptomsService.getDiagnosis ?
- *  Lift components state to Parent Component, App.jsx ?
- *  Manage components rendering in SymptomForm.jsx ?
- */
