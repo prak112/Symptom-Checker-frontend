@@ -2,24 +2,24 @@ import axios from 'axios'
 
 const baseUrl = '/api/protected/symptoms'
 
-// POST - 'Specific' search result from symptoms lists
-const getSpecificDiagnosis = async(symptomsList) => {
+// POST - 'General' search result from symptoms lists
+const getGeneralDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(baseUrl, symptomsList)
+        const response = await axios.post(`${baseUrl}/general`, symptoms)
         return response.data
     } catch (error) {
-        console.error(error)
+        console.log(error)
         throw error;
     }
 }
 
-// POST - 'General' search result from symptoms lists
-const getGeneralDiagnosis = async(symptomsList) => {
+// POST - 'Specific' search result from symptoms lists
+const getSpecificDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(baseUrl, symptomsList)
+        const response = await axios.post(`${baseUrl}/specific`, symptoms)
         return response.data
     } catch (error) {
-        console.error(error)
+        console.log(error)
         throw error;
     }
 }
