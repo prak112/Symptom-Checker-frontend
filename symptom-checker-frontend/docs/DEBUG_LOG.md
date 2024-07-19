@@ -31,7 +31,7 @@
 <hr>
 <br>
 
-# 2 - Debug `request` issues on Backend
+# 2 - Backend : Debug `request` issues
 - **Context** : 
     - The communication link is setup. Backend `requestBuilder.js`, controller utility module, improperly setup.
     - Error Information :
@@ -47,3 +47,22 @@
 - **Solution** : 
     - Wrong `HTTP request` type for both LookUp and AutoSearch queries to ICD API, i.e., `POST` instead of `GET`
     - Correction chain : `requestOptions` variable --> `requestBuilder.js` controller utility module --> `symptomChecker.js` controller --> `lookupSearchData.js` controller utility module
+
+<hr>
+<br>
+
+
+# 3 - Frontend : Render `diagnosis` data in `Diagnosis` component
+- **Context** :
+    - Rendering a `diagnosis` 'object with arrays as values' was challenging, since it was easier to render 'array of objects' with redundant keys
+- **Reason** :
+    - `diagnosis` data object was not directly passed to `Diagnosis` component to handle the rendering, instead complicated it by trying to render in `SymptomForm` component
+    - Understanding the structure of the response object and iterating through it by thinking in terms of rendering `Pandas DataFrame` was not clear until I started *Rubber-Duck Debugging*
+- **Solution** :
+    - Move the `diagnosis` data handling and rendering to `Diagnosis` component
+    - Unravelled or revisited several key ideas:
+        - `MaterialUI` components such as `TableContainer`, 
+        - `Object` and `Array` methods such as `Object.keys` and `Array.map` to maneuver through the `diagnosis` object keys and its Array values.
+        
+<hr>
+<br>
