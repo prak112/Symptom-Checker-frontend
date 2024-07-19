@@ -12,7 +12,7 @@ export default function SymptomForm(){
     const [loading, setLoading] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [symptoms, setSymptoms] = useState([])
-    const [diagnosis, setDiagnosis] = useState({})
+    const [diagnosis, setDiagnosis] = useState([])
     const [searchType, setSearchType] = useState('general')
 
     // center and border style
@@ -77,40 +77,10 @@ export default function SymptomForm(){
         )
     }
 
-    // render Diagnosis in Card - loading false, submitted true
-    /** render 'General' search = destinationEntities-->MatchingPVs-->label, score, foundationUri
-     * Chip - diagnosisLabel - <div>label</div> 
-     * Chip - diagnosisScore - <div>score</div>
-     * Stack - diagnosisDetail - 
-        * foundationUri LookUp = browserUrl, title["@value"], definition["@value"], longDefinition["@value"]
-        * Button text - <div>Read More on ICD-11</div>
-        * Route - Link to={browserUrl}
-        * Box-Typography- 
-            * title["@value"] - dark text, 
-            * definition["@value"] - light text, 
-            * if available, longDefinition["@value"] - fading text 
-    **/
-    /** render 'Specific' search = searchText, matchText, foundationUri, matchScore
-     * Chip - diagnosisLabel - <div>matchText</div> 
-     * Chip - diagnosisScore - <div>matchScore</div>
-     * Stack - diagnosisDetail -  
-        * foundationUri LookUp = browserUrl, title["@value"], definition["@value"], longDefinition["@value"]
-        * same as for 'General' search
-    **/ 
-
     if(submitted){
         return(
             <>
-            {diagnosis.map((item, index) => (
-                <Diagnosis
-                    key={index}
-                    label={item.label}
-                    score={item.score}
-                    url={item.url}
-                    title={item.title}
-                    detail={item.detail}
-                />
-            ))}
+            <Diagnosis data={diagnosis} />
             <Button 
                 component={Link} to="/" 
                 endIcon={<ArrowBack />} 
@@ -122,6 +92,7 @@ export default function SymptomForm(){
             </>
         )
     }
+
     return(        
         <Box sx={boxStyle}>
             {/* render Symptom Form - by default, loading false, submitted false */}
@@ -148,14 +119,10 @@ export default function SymptomForm(){
                     sx={{ border: '2px solid grey', borderRadius: '10px' }}
                     >
                     <FormControl>
-                        <FormLabel id="radio-buttons-group-label">Choose Symptom Checker type</FormLabel>
-                        <RadioGroup
-                            row
-                            aria-labelledby="radio-buttons-group-label"
-                            defaultValue="female"
-                            name="radio-buttons-group"
-                            onChange={handleSearchType}
-                        >
+                        <FormLabel id="radio-buttons-group-label">
+                            Choose Symptom Checker type
+                        </FormLabel>
+                        <RadioGroup row name="radio-buttons-group" onChange={handleSearchType} >
                             <FormControlLabel 
                                 value="general" control={<Radio />} label="General" required/>
                             <FormControlLabel 
