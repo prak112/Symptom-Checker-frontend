@@ -11,7 +11,7 @@ import { Link } from "react-router-dom"
 export default function SymptomForm(){
     const [loading, setLoading] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    const [symptoms, setSymptoms] = useState([])
+    const [symptoms, setSymptoms] = useState("")
     const [diagnosis, setDiagnosis] = useState([])
     const [searchType, setSearchType] = useState('general')
 
@@ -28,6 +28,9 @@ export default function SymptomForm(){
         width: '50%',        // container width
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
     }
+
+    // form-level validation and user-input sanitization
+
     
     // manage search type selection
     const handleSearchType = (event) => {
@@ -39,11 +42,11 @@ export default function SymptomForm(){
         event.preventDefault()
         setLoading(true)
         const symptomsPayload = { 
-            symptoms: symptoms
+            symptoms: symptoms.split(',').map((symptom) => symptom.trim()),
         }
-        console.log('Symptoms List : ', symptoms)
+        console.log('Symptoms List : ', symptomsPayload.symptoms)
 
-        let diagnosisData;
+        let diagnosisData = [];
         if(searchType === 'general'){
             diagnosisData = await symptomCheckerService.getGeneralDiagnosis(symptomsPayload)
             console.log('General Diagnosis DATA : ', diagnosisData)
@@ -63,9 +66,6 @@ export default function SymptomForm(){
     const returnSymptomForm = () => {
         setSubmitted(false);
     }
-
-    // form-level validation
-
 
     // render Loading screen - loading true, submitted false
     if(loading){
