@@ -66,3 +66,11 @@
         
 <hr>
 <br>
+
+# 4 - Backend : Diagnosis data gets overwritten
+- **Context** : 
+    - Diagnosis data keeps overwriting itself and accumulates test results
+- **Solution** :
+    - Confused as frontend state issue, but tracing it back to backend resulted in Controller logic being flawed.
+    - Diagnosis data arrays were globally initialized but not seperately for each request call.
+
