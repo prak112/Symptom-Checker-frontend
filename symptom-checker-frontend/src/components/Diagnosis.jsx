@@ -1,20 +1,23 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import LaunchIcon from '@mui/icons-material/Launch';  // for diagnosis info display
-
+// for info display
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
+import LaunchIcon from '@mui/icons-material/Launch'  
 import { 
   Table, TableBody, TableCell, 
   TableHead, TableRow, TableContainer, Paper 
-} from '@mui/material';   // for diagnosis info display
-import { Button } from '@mui/material';  // for Diagnosis info display
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';  // for uniform font style
-//import Chip from '@mui/material/Chip';  // for Triage System design
-//import Stack from '@mui/material/Stack'; // for Diagnosis info display
+} from '@mui/material'
+import { Button } from '@mui/material'
+import Divider from '@mui/material/Divider'
+//import Stack from '@mui/material/Stack'
 
-//import { createTheme } from '@mui/material/styles';   // for Triage System design
+// for uniform font style
+import Typography from '@mui/material/Typography'
+
+// for Triage System design 
+// import Chip from '@mui/material/Chip'
+// import { createTheme } from '@mui/material/styles'
 
 // check custom-colors MUI
 // const theme = createTheme({
@@ -26,9 +29,7 @@ import Typography from '@mui/material/Typography';  // for uniform font style
 //       contrastText: '#242105',
 //     },
 //   },
-// });
-
-
+// })
 
 export default function Diagnosis({ data }) {
   // center and border style
@@ -52,13 +53,15 @@ export default function Diagnosis({ data }) {
 
   // TO DO : 
   /**
-   * Render Score with %
-   * Understand and build Triage system logic
+   * DEBUG-Long texts in 'Detail' column are converted to NaN
+   * FEAT-Symptom form input validation and sanitization
+   * TEST-Unit tests for components
+   * FEAT-Understand and build Triage system logic
   **/
   const isUrl = (value) => typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://')); 
   const isScore = (value) => {
     const scoreRegex = /-?\d+(\.\d+)?/;
-    return typeof value === 'string' && scoreRegex.test(value);
+    return scoreRegex.test(value);
   }
   const isHtml = (value) => {
     return typeof value === 'string' && value.includes('<')
