@@ -1,11 +1,8 @@
-
+import PropTypes from 'prop-types'
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { ExitToAppOutlined, HomeOutlined, Person, QuestionMark } from '@mui/icons-material';
+import { ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
-
-
-import PropTypes from 'prop-types';
 
 export default function Sidebar({ open, toggleDrawer }){
     Sidebar.propTypes = {
@@ -56,12 +53,12 @@ export default function Sidebar({ open, toggleDrawer }){
                         <ListItemText primary="Home" />
                     </ListItemButton>
                 </Link>
-                <Link to="/profile" style={sidebarStyles.link}>
+                <Link to="/signup" style={sidebarStyles.link}>
                 <ListItemButton sx={sidebarStyles.listItemButton}>
                     <ListItemIcon>
-                            <Person />
+                            <AppRegistrationOutlined />
                         </ListItemIcon>
-                        <ListItemText primary="Profile" />
+                        <ListItemText primary="Sign Up" />
                     </ListItemButton>
                 </Link>
                 <Link to="/faqs" style={sidebarStyles.link}>
