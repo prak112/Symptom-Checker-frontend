@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'
 
 import Home from './pages/Home'
-import Profile from './pages/Profile'
+import SignupModal from './components/modals/SignupModal'
 import FAQ from './pages/Faqs'
 
 import { useState } from 'react'
@@ -27,7 +27,7 @@ function App() {
       <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer}/> 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/signup" element={<SignupModal modalTitle="Sign Up!" />} /> {/*if user not authorized*/}
         <Route path="/faqs" element={<FAQ />}/>
         <Route path="/logout" element={<Home />} />
       </Routes>
