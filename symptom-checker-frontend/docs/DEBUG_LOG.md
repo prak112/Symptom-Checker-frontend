@@ -74,3 +74,18 @@
     - Confused as frontend state issue, but tracing it back to backend resulted in Controller logic being flawed.
     - Diagnosis data arrays were globally initialized but not seperately for each request call.
 
+<hr>
+<br>
+
+# 5 - Frontend : React Router must route to Modal instead of Page
+- **Context** : 
+    - `SignupModal` must be opened when the user clicks `Sign Up` in the Sidebar menu.
+    - ATM, it routes to a page.
+- **Solution** :
+    - Use `useLocation` and `useHistory` hooks from `react-router-dom` to setup routes
+    - Setup a `ModalWrapper` component in `App.jsx`
+
+<hr>
+<br>
+
+
