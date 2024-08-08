@@ -19,17 +19,6 @@ import Typography from '@mui/material/Typography'
 // import Chip from '@mui/material/Chip'
 // import { createTheme } from '@mui/material/styles'
 
-// check custom-colors MUI
-// const theme = createTheme({
-//   palette: {
-//     ochre: {
-//       main: '#E3D026',
-//       light: '#E9DB5D',
-//       dark: '#A29415',
-//       contrastText: '#242105',
-//     },
-//   },
-// })
 
 export default function Diagnosis({ data }) {
   // center and border style
@@ -50,14 +39,6 @@ export default function Diagnosis({ data }) {
     data: PropTypes.object.isRequired
   };
 
-
-  // TO DO : 
-  /**
-   * DEBUG-Long texts in 'Detail' column are converted to NaN
-   * FEAT-Symptom form input validation and sanitization
-   * TEST-Unit tests for components
-   * FEAT-Understand and build Triage system logic
-  **/
   const isUrl = (value) => typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://')); 
   const isScore = (value) => {
     const scoreRegex = /-?\d+(\.\d+)?/;
