@@ -37,16 +37,19 @@ function App() {
   )
 }
 
-/**User authentication
- * FEAT-setup auth services - DONE 
- * FEAT-setup registration UI - DONE 
- * DEBUG-signup : User registration fails without any error - FIXED
- * FEAT-signup : setup navigation to modal - DONE
- * FEAT-signup success : reroute to 'Home' - DONE
- * FEAT-signup success : update Header with <Avatar> navigate to User Profile 
- * FEAT-signup success : update Sidebar with Profile and Logout items
- * FEAT-Update Sidebar with conditional render of 'Home', 'Signup', 'Login'-'Profile' 
- * FEAT-setup login UI
+/**TO DO :
+ * FEAT-Services : setup auth services - DONE 
+ * FEAT-Signup : setup registration UI - DONE 
+ * DEBUG-Signup : User registration fails without any error - FIXED
+ * FEAT-Signup : setup navigation to modal - DONE
+ * FEAT-Signup : reroute to 'Home' after signup success - DONE
+ * FEAT-Header : update Header with <Avatar> navigate to User Profile 
+ * FEAT-Signup : update Sidebar with Profile and Logout items
+ * FEAT-Sidebar : Update Sidebar with conditional render of 'Home', 'Signup', 'Login'-'Profile' 
+ * FEAT-Login : setup login UI
+ * DEBUG-Diagnosis : Long texts in 'Detail' column are converted to NaN
+ * FEAT-Diagnosis : Symptom form input validation and sanitization
+ * FEAT-Diagnosis : Understand and build Triage system logic
 **/
 
 // Handler for Modals
