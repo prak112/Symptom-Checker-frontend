@@ -1,17 +1,14 @@
-/**User registration
- * setup services - DONE 
- * setup registration UI - DONE 
- * DEBUG-User registration fails without any error.
- * setup navigation to modal - 
-**/
 import PropTypes from 'prop-types'
 import { useState } from 'react';
-import { Box, Button, Typography, Modal } from '@mui/material'
+import { Box, Button, Modal, Typography } from '@mui/material'
 import { 
     TextField, FormControlLabel, Checkbox, FormHelperText 
 } from '@mui/material'
-import HowToRegIcon from '@mui/icons-material/HowToReg'
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import { useNavigate } from 'react-router-dom';
+
 import authServices from '../../services/auth'
+import Logo from '../../assets/logo.svg'
 
 const boxStyle = {
     display: 'grid',
@@ -21,7 +18,7 @@ const boxStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    height: '30vh',
+    height: '50vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -39,18 +36,22 @@ const centeredDivStyle = {
     margin: "0 auto"
 }
 
-export default function SignupModal({ modalTitle }) {
+const modalStyle = {
+    background: 'linear-gradient(to top, #FFC107 10%, #FFEB3B 90%)' // matt-yellow
+    // background: 'linear-gradient(to bottom, #A3D1CC, #536B68)' // matt-green
+}
+
+export default function SignupModal({ modalTitle, open, handleClose }) {
     SignupModal.propTypes = {
         modalTitle: PropTypes.string.isRequired,
+        open: PropTypes.func.isRequired,
+        handleClose: PropTypes.func.isRequired,
     }
-
-    const [open, setOpen] = useState(false)
+    
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [showPassword, setShowPassword] = useState(true)
-
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const navigate = useNavigate()
 
     // Auth service handler
     const registerUser = async (event) => {
@@ -60,23 +61,35 @@ export default function SignupModal({ modalTitle }) {
             username: username,
             password: password
         }
-        const registrationResult = await authServices.registerUser(userInfoPayload)
-        console.log('RESULT: ', registrationResult)
+        try {
+            const registrationResult = await authServices.registerUser(userInfoPayload)
+            console.log('RESULT: ', registrationResult)
+            navigate('/')
+        } catch (error) {
+            console.error('Error during registration : ', error);
+        }
     }
 
     return (
         <div style={centeredDivStyle}>
-            <Button onClick={handleOpen}>{modalTitle}</Button>
+            <Button onClick={open}>{modalTitle}</Button>
             <Modal
+                sx={modalStyle}
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={boxStyle}>
-                    <Typography id="modal-heading" variant="h6" component="h2">
-                        Sign Up!
-                    </Typography>
+                <div style={{display: 'flex', justifyContent:'center'}}>
+                    <img src={Logo} alt='Logo' 
+                        width={100} height={100} 
+                        style={{paddingRight: '50px', paddingLeft: '25px'}}
+                    />
+                    <Typography variant="h5" align="center">
+                        Symptom Checker and Triage System
+                    </Typography> 
+                </div>
                     <form onSubmit={registerUser} style={formStyle}>
                         <TextField 
                             id="username"
@@ -84,7 +97,7 @@ export default function SignupModal({ modalTitle }) {
                             label="Username"
                             placeholder="Username" 
                             variant="outlined"
-                            required="true"
+                            required
                             onChange={(e)=>setUsername(e.target.value)}
                         />
                         <TextField 
@@ -93,6 +106,7 @@ export default function SignupModal({ modalTitle }) {
                             label="Password"
                             placeholder="Password" 
                             variant="outlined"
+                            required
                             onChange={(e)=>setPassword(e.target.value)}
                         />
                         <FormControlLabel
@@ -108,8 +122,10 @@ export default function SignupModal({ modalTitle }) {
                             Sign Me up!
                         </Button>
                         <FormHelperText id="helper-text">
-                            All user data and symptom data is end-to-end encrypted.
-                        </FormHelperText>   
+                            All your data and symptom data is <em>ALWAYS end-to-end encrypted</em>,
+                            which means only <em>YOU</em> see the real data, others see encrypted gibberish.
+                        </FormHelperText>
+                           
                     </form>
                 </Box>
             </Modal>
