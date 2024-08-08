@@ -4,11 +4,10 @@ const baseUrl = '/public/auth'
 
 // Signup
 const registerUser = async(userInformation) => {
-    try{
+    try {
         const response = await axios.post(`${baseUrl}/signup`, userInformation)
         return response.data
-    }
-    catch(error){
+    } catch(error){
         console.error('Error during registration: ', error)
         throw error
     }
