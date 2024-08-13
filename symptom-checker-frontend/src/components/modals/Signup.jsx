@@ -3,8 +3,8 @@ import { Box, Button, Modal, Typography, Stack, Divider } from '@mui/material'
 import { 
     TextField, FormControlLabel, Checkbox, FormHelperText 
 } from '@mui/material'
-import HowToRegIcon from '@mui/icons-material/HowToReg'
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import { HowToRegOutlined } from '@mui/icons-material';
+import { LoginOutlined } from '@mui/icons-material';
 // react
 import PropTypes from 'prop-types'
 import Copyright from '../Copyright'
@@ -47,10 +47,6 @@ const modalStyle = {
 }
 
 export default function SignupModal({ open, handleClose }) {
-    SignupModal.propTypes = {
-        open: PropTypes.bool.isRequired,
-        handleClose: PropTypes.func.isRequired,
-    }
     // setup states
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
@@ -84,74 +80,87 @@ export default function SignupModal({ open, handleClose }) {
     if(!open) return null;
 
     return (
-        <div style={centeredDivStyle}>
-            <Button onClick={open}></Button>
             <Modal
                 sx={modalStyle}
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby="signup-modal"
             >
-                <Box sx={boxStyle}>
-                <div style={{display: 'flex', justifyContent:'center'}}>
-                    <img src={Logo} alt='Logo' 
-                        width={100} height={100} 
-                        style={{paddingRight: '50px', paddingLeft: '25px'}}
-                    />
-                    <Typography variant="h5" align="center">
-                        Symptom Checker and Triage System
-                    </Typography> 
-                </div>
-                    <form onSubmit={registerUser} style={formStyle}>
-                        <TextField 
-                            id="username"
-                            type="text" 
-                            label="Username"
-                            placeholder="Username" 
-                            variant="outlined"
-                            required
-                            onChange={(e)=>setUsername(e.target.value)}
+                <div style={centeredDivStyle}>
+                    <Box sx={boxStyle}>
+                    <div style={{display: 'flex', justifyContent:'center'}}>
+                        <img src={Logo} alt='Logo' 
+                            width={100} height={100} 
+                            style={{paddingRight: '50px', paddingLeft: '25px'}}
                         />
-                        <TextField 
-                            id="password"
-                            type={showPassword ? "text" : "password"} 
-                            label="Password"
-                            placeholder="Password" 
-                            variant="outlined"
-                            required
-                            onChange={(e)=>setPassword(e.target.value)}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox 
-                                    checked={showPassword}
-                                    onChange={(e) => setShowPassword(e.target.checked)}
-                                />
-                            }
-                            label="Show Password"
-                        />
-                        <FormHelperText id="helper-text">
-                            All your data and symptom data is <em>ALWAYS end-to-end encrypted</em>,
-                            which means only <em>YOU</em> see the real data, others see encrypted gibberish.
-                        </FormHelperText>
-                        <Button type="submit" endIcon={<HowToRegIcon />} variant="outlined" color="secondary">
-                            Sign Me up!
-                        </Button>
-                    </form>
-                    <Divider />
-                    <Stack spacing={2}>
-                        <Typography variant="h6" align="center">
-                            <Divider>Already existing User ?</Divider>
-                        </Typography>
-                        <Button onClick={loginRedirect} endIcon={<LoginOutlinedIcon />} variant="outlined" color="success" >
-                            Login 
-                        </Button>
+                        <Typography variant="h5" align="center">
+                            Symptom Checker and Triage System
+                        </Typography> 
+                    </div>
+                        <form onSubmit={registerUser} style={formStyle}>
+                            <TextField 
+                                id="username"
+                                type="text" 
+                                label="Username"
+                                placeholder="Username" 
+                                variant="outlined"
+                                required
+                                onChange={(e)=>setUsername(e.target.value)}
+                            />
+                            <TextField 
+                                id="password"
+                                type={showPassword ? "text" : "password"} 
+                                label="Password"
+                                placeholder="Password" 
+                                variant="outlined"
+                                required
+                                onChange={(e)=>setPassword(e.target.value)}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox 
+                                        checked={showPassword}
+                                        onChange={(e) => setShowPassword(e.target.checked)}
+                                    />
+                                }
+                                label="Show Password"
+                            />
+                            <FormHelperText id="helper-text">
+                                All your data and symptom data is <em>ALWAYS end-to-end encrypted</em>,
+                                which means only <em>YOU</em> see the real data, others see encrypted gibberish.
+                            </FormHelperText>
+                            <Button 
+                                type="submit" 
+                                endIcon={<HowToRegOutlined />} 
+                                variant="outlined" 
+                                color="secondary"
+                            >
+                                Sign Me up!
+                            </Button>
+                        </form>
                         <Divider />
-                    </Stack>
-                    <Copyright />
-                </Box>
+                        <Stack spacing={2}>
+                            <Typography variant="h6" align="center">
+                                <Divider>Already existing User ?</Divider>
+                            </Typography>
+                            <Button 
+                                onClick={loginRedirect} 
+                                endIcon={<LoginOutlined />} 
+                                variant="outlined" 
+                                color="success" 
+                            >
+                                Login 
+                            </Button>
+                            <Divider />
+                        </Stack>
+                        <Copyright />
+                    </Box>
+                </div>
             </Modal>
-        </div>
     );
+}
+
+SignupModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
 }
