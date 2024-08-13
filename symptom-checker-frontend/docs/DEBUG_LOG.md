@@ -89,3 +89,50 @@
 <br>
 
 
+# 6 - Frontend : Redirect Modal from Signup to Login
+- **Context** :
+    - Redirect to login if 'already existing user' must move UI from the `SignupModal` to `LoginModal`
+    - ATM, it is just routing whichever Modal is at `/auth`
+    - Trying query search params to route using `useNavigate` hook from Signup to Login
+- **Solution** :
+    - In `Signup` Modal component, declare `loginRedirect` using `navigate` hook with search parameter as follows :
+    ```javascript
+        // reroute to login
+        const loginRedirect = () => {
+            navigate("/auth?public=login")
+        }
+    ```
+    
+    - In `App` component, refactor `ModalWrapper` component to conditionally render based on search parameters
+
+<hr>
+<br>
+
+# 7 - Frontend : Clear Session data when user clicks 'Logout'
+- **Context** :
+    - FEAT-Logout : Setup logout process and clear user data
+    - Requires 'handleLogout' event handler to clear 'user' State
+    - Checking possibility of 'useContext' to handle user-related information on a higher level
+- **Solution** :
+    - Setup a `UserContext.jsx` to use as a Higher-level component than `App` and deep-tree reach
+    - Import `UserContext` in all neccessary components requiring User info for conditional rendering such as :
+        - `Header`, 
+        - `Sidebar`, 
+        - `UserProfile`
+        - `Logout`
+
+<hr>
+<br>
+
+# 8 - Frontend : `Modal` (MUI) component error revealed on proper `PropTypes` declaration
+- **Context** :
+    - `PropTypes` were declared inside the React components', which was a mistake.
+    - After correctly declaring `PropTypes` *OUTSIDE* the React component, MUI threw `Modal` component error!
+    - Multiple JSX elements were being rendered inside `Modal` component
+    - According to the error and MUI documentation, only a *SINGLE* `<div>` or `<>`(empty div) tag were supposed to be present.
+- **Solution** :
+    - Redeclare `PropTypes` outside the component for `Signup`, `Login`, `Logout`, `UserContext`, `UserProfile`, `Header` and `Sidebar`.
+    - In the `Modal` component, wrapped all the JSX elements inside a single React element and `<div>` tag.
+
+<hr>
+<br>
