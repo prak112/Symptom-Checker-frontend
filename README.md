@@ -4,7 +4,7 @@
 - The Symptom Checker frontend project is a web application that allows users to input their symptoms and receive possible diagnoses based on those symptoms.
 - The application UI clearly displays a disclaimer at all times about the possible inaccuracies this application could generate.
 
-- Prototype, plan and implementation of the Symptom Checker application are defined in the [prototype README](https://github.com/prak112/ICD11-SymptomChecker#oveview)
+- Prototype, plan and implementation of the Symptom Checker application are defined in the [prototype README](https://github.com/prak112/ICD11-SymptomChecker#overview)
 - Tools and Technologies used : 
     - `react`
     - `material-ui`
