@@ -1,20 +1,26 @@
 // imports
-//import Sidebar from './components/Sidebar'
+// context
+import { UserProvider } from './contexts/UserContext'
+// components
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'
-
+// modals
+import SignupModal from './components/modals/Signup'
+import LoginModal from './components/modals/Login'
+import LogoutModal from './components/modals/Logout'
+// pages
 import Home from './pages/Home'
-import SignupModal from './components/modals/SignupModal'
+import UserProfile from './pages/UserProfile'
 import FAQ from './pages/Faqs'
-
+// react
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 
 
 // top level component
-function App() {
+export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   // handle sidebar
@@ -23,34 +29,30 @@ function App() {
   }
 
   return (
-    <div>
-      <Header toggleDrawer={toggleDrawer} />
-      <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer}/> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<ModalWrapper />} />{/*if user not authorized*/}
-        <Route path="/faqs" element={<FAQ />}/>
-        <Route path="/logout" element={<Home />} />
-      </Routes>
-      <Footer />
-    </div>  
+    <UserProvider>
+      <div>
+        <Header toggleDrawer={toggleDrawer}  />
+        <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
+          <Route path="/faqs" element={<FAQ />}/>
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
+        </Routes>
+        <Footer />
+      </div> 
+    </UserProvider>
   )
 }
 
-/**TO DO :
- * FEAT-Services : setup auth services - DONE 
- * FEAT-Signup : setup registration UI - DONE 
- * DEBUG-Signup : User registration fails without any error - FIXED
- * FEAT-Signup : setup navigation to modal - DONE
- * FEAT-Signup : reroute to 'Home' after signup success - DONE
- * FEAT-Header : update Header with <Avatar> navigate to User Profile 
- * FEAT-Signup : update Sidebar with Profile and Logout items
- * FEAT-Sidebar : Update Sidebar with conditional render of 'Home', 'Signup', 'Login'-'Profile' 
- * FEAT-Login : setup login UI
- * DEBUG-Diagnosis : Long texts in 'Detail' column are converted to NaN
+/**TO DO - Client Side Routing (CSR):
+ * FEAT-Login Validation : Throw login error on invalid credentials
+ * DEBUG-Diagnosis : Long texts in 'Detail' column are converted to NaN 
  * FEAT-Diagnosis : Symptom form input validation and sanitization
  * FEAT-Diagnosis : Understand and build Triage system logic
 **/
+
 
 // Handler for Modals
 function ModalWrapper() {
@@ -58,17 +60,31 @@ function ModalWrapper() {
   const navigate = useNavigate()
 
   const returnHome = () => navigate('/')
-
-  return(
-    <>
-        <SignupModal 
-          modalTitle='Sign Up!' 
-          open={location.pathname==='/signup'}
-          handleClose={returnHome}
-        />
-    </>
-  )
-
+  // Extract query parameter
+  const queryParams = new URLSearchParams(location.search)
+  const queryType = queryParams.get('public')
+  
+  if(queryType === 'login'){
+    return(
+      <LoginModal
+      open={location.pathname === '/auth'}
+      handleClose={returnHome} 
+    />)
+  }
+  else if(queryType === 'logout') {
+    return(
+      <LogoutModal
+      open={location.pathname === '/auth'}
+      handleClose={returnHome}
+    />
+    )
+  }
+  else {  // signup if neither
+    return(
+      <SignupModal 
+        open={location.pathname === '/auth'}
+        handleClose={returnHome}
+    />
+    )
+  }   
 }
-
-export default App
