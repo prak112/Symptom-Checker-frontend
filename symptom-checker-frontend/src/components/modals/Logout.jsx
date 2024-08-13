@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types'
-import { Modal, Box, Typography, Button, FormHelperText } from "@mui/material"
+import { Modal, Box, Typography, Button, FormHelperText, Divider } from "@mui/material"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import EnhancedEncryptionOutlined from '@mui/icons-material/EnhancedEncryptionOutlined';
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../contexts/UserContext'
+import Copyright from '../Copyright';
 
 // styles
 const boxStyle = {
@@ -30,40 +34,55 @@ const modalStyle = {
      background: 'linear-gradient(to bottom, #A3D1CC, #536B68)' // matt-red
 }
 
-export default function LogoutModal({ open, handleClose, handleLogout }){
-    LogoutModal.propTypes = {
-        open: PropTypes.bool.isRequired,
-        handleClose: PropTypes.func.isRequired,
-        handleLogout: PropTypes.func.isRequired,
+export default function LogoutModal({ open, handleClose }){
+    const { setUser } = useContext(UserContext)
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        setUser(null)
+        window.sessionStorage.removeItem('authenticatedUser')
+        navigate('/')
     }
 
     return(
-        <div style={centeredDivStyle}>
             <Modal
-                    sx={modalStyle}
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >            
-                <Box sx={boxStyle}>
-                    <Typography variant="h4" align="center" color="darkred">
-                        Confirm Logout
-                    </Typography>
-                    <FormHelperText id="helper-text">
+                sx={modalStyle}
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="logout-modal"
+            >   
+                <div style={centeredDivStyle}> 
+                    <Box sx={boxStyle}>
+                        <Typography variant="h4" align="center" color="darkred">
+                            Confirm Logout
+                        </Typography>
+                        <FormHelperText id="helper-text">
                             <EnhancedEncryptionOutlined />
                             All your data and symptom data is <em>ALWAYS end-to-end encrypted</em>,
                             which means only <em>YOU</em> see the real data, others see encrypted gibberish.
-                    </FormHelperText>
-                    <Button 
-                        onClick={handleLogout}
-                        variant="contained" 
-                        color="warning" 
-                        endIcon={<LogoutOutlinedIcon />}>
-                        Logout ?
-                    </Button>
-                </Box>
+                        </FormHelperText>
+                        <Button 
+                            onClick={handleLogout}
+                            variant="contained" 
+                            color="warning" 
+                            endIcon={<LogoutOutlinedIcon />}>
+                            Logout ?
+                        </Button>
+                        <Button 
+                            onClick={() => navigate('/')} 
+                            variant="outlined"
+                            color="secondary" >
+                            Cancel
+                        </Button>
+                        <Divider />
+                        <Copyright />
+                    </Box>
+                </div>
             </Modal>
-        </div>
     )
+}
+
+LogoutModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
 }
