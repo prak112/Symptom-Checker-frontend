@@ -6,11 +6,9 @@ export default function FAQ(){
     }
 
     return(
-        <>
-        <h3 style={centeredDivStyle}>FAQs</h3>
-        <div>
+        <div style={centeredDivStyle}>
+        <h3>FAQs</h3>
             ...coming soon...
         </div>
-        </>
     )
 }
