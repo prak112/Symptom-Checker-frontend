@@ -30,7 +30,14 @@ export default function SymptomForm(){
     }
 
     // form-level validation and user-input sanitization
-
+    const handleInputChange = (event) => {
+        const { value } = event.target;
+        // sanitize input by removing leading and trailing spaces
+        const sanitizedValue = value.trim();
+        // sanitize input for SQL injection
+        const sanitizedInput = sanitizedValue.replace(/[^\w\s]/g, ",");
+        setSymptoms(sanitizedInput);
+    }
     
     // manage search type selection
     const handleSearchType = (event) => {
@@ -104,7 +111,7 @@ export default function SymptomForm(){
                     label="Symptoms"
                     placeholder="blocked nose, high fever,..." 
                     variant="outlined"
-                    onChange={(e) => setSymptoms(e.target.value)}
+                    onChange={handleInputChange}
                     required 
                 />
                 {/* symptom checker choice radio buttons */}
