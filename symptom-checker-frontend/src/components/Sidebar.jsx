@@ -1,20 +1,26 @@
-
-import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { ExitToAppOutlined, HomeOutlined, Person, QuestionMark } from '@mui/icons-material';
+// React
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { UserContext } from '../contexts/UserContext'
+// materialUI 
+import { 
+    Drawer, List, ListItemButton, ListItemIcon, ListItemText 
+} from '@mui/material'
+import { 
+    ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark 
+} from '@mui/icons-material'
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+// resources
 import Logo from '../assets/logo.svg'
 
 
-import PropTypes from 'prop-types';
-
-export default function Sidebar({ open, toggleDrawer }){
-    Sidebar.propTypes = {
-        open: PropTypes.bool.isRequired,
-        toggleDrawer: PropTypes.func.isRequired,
-    }
-
+export default function Sidebar({ open, toggleDrawer }){    
+    // get user info
+    const { user } = useContext(UserContext)
     const sidebarStyles = {
-        drawer: { 
+        drawer: {
+            background: 'linear-gradient(to right, #A3D1CC, #536B68)',
             width: 300, 
             flexShrink: 0 
         },
@@ -56,14 +62,25 @@ export default function Sidebar({ open, toggleDrawer }){
                         <ListItemText primary="Home" />
                     </ListItemButton>
                 </Link>
-                <Link to="/profile" style={sidebarStyles.link}>
-                <ListItemButton sx={sidebarStyles.listItemButton}>
-                    <ListItemIcon>
-                            <Person />
+                {/* if user authenticated render 'Profile' else 'Signup/Login' */}
+                {user 
+                ? (<Link to="/profile" style={sidebarStyles.link}>
+                    <ListItemButton sx={sidebarStyles.listItemButton}>
+                        <ListItemIcon>
+                            <PermIdentityOutlinedIcon />
                         </ListItemIcon>
                         <ListItemText primary="Profile" />
                     </ListItemButton>
-                </Link>
+                    </Link>)
+                : (<Link to="/auth" style={sidebarStyles.link}>
+                    <ListItemButton sx={sidebarStyles.listItemButton}>
+                        <ListItemIcon>
+                            <AppRegistrationOutlined />
+                        </ListItemIcon>
+                        <ListItemText primary="Sign up/Login" />
+                    </ListItemButton>
+                    </Link>)
+                }
                 <Link to="/faqs" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
                         <ListItemIcon>
@@ -72,18 +89,26 @@ export default function Sidebar({ open, toggleDrawer }){
                         <ListItemText primary="FAQs" />
                     </ListItemButton>
                 </Link>
-                <Link to="/logout" style={sidebarStyles.link}>
-                    <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <ExitToAppOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary="Logout" />
-                    </ListItemButton>
-                </Link>
+                {/* if user authenticated render 'Logout' */}
+                {user 
+                ? (
+                    <Link to="/auth?public=logout" style={sidebarStyles.link}>
+                        <ListItemButton sx={sidebarStyles.listItemButton}>
+                            <ListItemIcon>
+                                <ExitToAppOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
+                        </ListItemButton>
+                    </Link>)
+                : null}
             </List>
         </Drawer>
     )
 }
 
-
+Sidebar.propTypes = {
+    open: PropTypes.bool.isRequired,
+    toggleDrawer: PropTypes.func.isRequired,
+    // registeredUser: PropTypes.string,
+}
 

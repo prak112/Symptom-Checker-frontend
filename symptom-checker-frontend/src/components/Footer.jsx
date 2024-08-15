@@ -1,5 +1,6 @@
-import GitHubIcon from '@mui/icons-material/GitHub';
-import { Stack, Typography } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub'
+import { Stack, Typography } from '@mui/material'
+import Copyright from './Copyright'
 
 export default function Footer(){
     return(
@@ -16,9 +17,7 @@ export default function Footer(){
                 <a href="https://github.com/prak112/ICD11-SymptomChecker" target="_blank" rel="noopener noreferrer">
                     <GitHubIcon />
                 </a>
-                <Typography>
-                    ICD 11 Symptom Checker | Prakirth Govardhanam, Copyrights 2024
-                </Typography>
+                <Copyright />
             </Stack>
             <hr></hr>
         </footer>
