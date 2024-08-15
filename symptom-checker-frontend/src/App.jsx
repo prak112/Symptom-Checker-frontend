@@ -1,6 +1,7 @@
 // imports
 // context
 import { UserProvider } from './contexts/UserContext'
+import { AlertProvider } from './contexts/AlertContext'
 // components
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
@@ -19,7 +20,19 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 
 
-// top level component
+/**TO DO - Client Side Routing (CSR):
+ * FEAT-Refine search results : Group symptoms result by user input with scores
+ * FEAT-Encrypt : symptom data, user data with local DB_SECRET key for storage
+ * FEAT-Diagnosis : Symptom form input validation and sanitization
+ * FEAT-Diagnosis : Understand and build Triage system logic
+**/
+
+
+/**
+ * The main component of the application.
+ *
+ * @returns {JSX.Element} The rendered App component.
+ */
 export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -29,6 +42,7 @@ export default function App() {
   }
 
   return (
+    <AlertProvider>
     <UserProvider>
       <div>
         <Header toggleDrawer={toggleDrawer}  />
@@ -43,18 +57,14 @@ export default function App() {
         <Footer />
       </div> 
     </UserProvider>
+    </AlertProvider>
   )
 }
 
-/**TO DO - Client Side Routing (CSR):
- * FEAT-Login Validation : Throw login error on invalid credentials
- * DEBUG-Diagnosis : Long texts in 'Detail' column are converted to NaN 
- * FEAT-Diagnosis : Symptom form input validation and sanitization
- * FEAT-Diagnosis : Understand and build Triage system logic
-**/
-
-
-// Handler for Modals
+/**
+ * Renders a modal based on the query parameter 'public' in the URL.
+ * @returns {JSX.Element} The rendered modal component.
+ */
 function ModalWrapper() {
   const location = useLocation()
   const navigate = useNavigate()
