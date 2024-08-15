@@ -2,10 +2,14 @@ import PropTypes from 'prop-types'
 import { Modal, Box, Typography, Button, FormHelperText, Divider } from "@mui/material"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import EnhancedEncryptionOutlined from '@mui/icons-material/EnhancedEncryptionOutlined';
+// components
+import Copyright from '../Copyright';
+// context
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
-import Copyright from '../Copyright';
+import { useAlert } from '../../contexts/useAlert';
+
 
 // styles
 const boxStyle = {
@@ -34,14 +38,30 @@ const modalStyle = {
      background: 'linear-gradient(to bottom, #A3D1CC, #536B68)' // matt-red
 }
 
+/**
+ * LogoutModal component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Determines if the modal is open or not.
+ * @param {Function} props.handleClose - The function to handle closing the modal.
+ * @returns {JSX.Element} The LogoutModal component.
+ */
 export default function LogoutModal({ open, handleClose }){
     const { setUser } = useContext(UserContext)
+    const showAlert = useAlert()
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        setUser(null)
-        window.sessionStorage.removeItem('authenticatedUser')
-        navigate('/')
+        try {
+            setUser(null)
+            window.sessionStorage.removeItem('authenticatedUser')
+            navigate('/')
+            showAlert('Logged out successfully.', 'success')
+        } catch (error) {
+            console.error('Error during Logout : ', error)
+            showAlert(`Error during Logout : ${error.response.data.error}`, 'error')        
+        }
     }
 
     return(

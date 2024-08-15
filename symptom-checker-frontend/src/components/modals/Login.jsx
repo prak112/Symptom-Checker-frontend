@@ -12,8 +12,9 @@ import { useNavigate } from 'react-router-dom'
 import Copyright from '../Copyright';
 import authServices from '../../services/auth'
 import Logo from '../../assets/logo.svg'
+// context
 import { UserContext } from '../../contexts/UserContext'
-
+import { useAlert } from '../../contexts/useAlert';
 
 // styles
 const boxStyle = {
@@ -47,13 +48,23 @@ const modalStyle = {
     // background: 'linear-gradient(to bottom, #A3D1CC, #536B68)' // matt-green
 }
 
+/**
+ * LoginModal component.
+ * 
+ * @param {Object} props - Component props.
+ * @param {boolean} props.open - Flag indicating if the modal is open.
+ * @param {Function} props.handleClose - Function to handle modal close event.
+ * @returns {JSX.Element|null} The LoginModal component.
+ */
 export default function LoginModal({ open, handleClose }){
     // setup states
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [showPassword, setShowPassword] = useState(true)
     const navigate = useNavigate()
+    // setup context
     const { setUser } = useContext(UserContext)
+    const showAlert = useAlert()
 
     // Auth service handler
     const authenticateUser = async (event) => {
@@ -71,8 +82,10 @@ export default function LoginModal({ open, handleClose }){
             setUsername(null)
             setPassword(null)
             navigate('/')   // redirect to home
+            showAlert('Logged in successfully!', 'success') // success alert
         } catch (error) {
-            console.error('Error during registration : ', error);
+            console.error('Error during Login : ', error);
+            showAlert(`Error during Login : ${error.response.data.error}`, 'error') // error alert
         }
     }
     
@@ -107,6 +120,7 @@ export default function LoginModal({ open, handleClose }){
                                 placeholder="Username" 
                                 variant="outlined"
                                 required
+                                autoComplete="username" // set autocomplete attribute
                                 onChange={(e)=>setUsername(e.target.value)}
                             />
                             <TextField 
@@ -116,6 +130,7 @@ export default function LoginModal({ open, handleClose }){
                                 placeholder="Password" 
                                 variant="outlined"
                                 required
+                                autoComplete="current-password" // set autocomplete attribute
                                 onChange={(e)=>setPassword(e.target.value)}
                             />
                             <FormControlLabel

@@ -13,6 +13,7 @@ import { useState } from 'react';
 // resources
 import authServices from '../../services/auth'
 import Logo from '../../assets/logo.svg'
+import { useAlert } from '../../contexts/useAlert';
 
 // styles
 const boxStyle = {
@@ -46,11 +47,20 @@ const modalStyle = {
     // background: 'linear-gradient(to bottom, #A3D1CC, #536B68)' // matt-green
 }
 
+/**
+ * SignupModal component.
+ * 
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Determines if the modal is open or not.
+ * @param {function} props.handleClose - The function to handle modal close event.
+ * @returns {JSX.Element|null} The SignupModal component.
+ */
 export default function SignupModal({ open, handleClose }) {
     // setup states
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [showPassword, setShowPassword] = useState(true)
+    const showAlert = useAlert()
     const navigate = useNavigate()
     
     // reroute to login
@@ -70,10 +80,11 @@ export default function SignupModal({ open, handleClose }) {
             console.log('RESULT: ', registrationResult)
             setUsername(null)
             setPassword(null)
-            // redirect user to login after successful registration 
-            loginRedirect()
+            loginRedirect() // after successful registration
+            showAlert('Signed up successfully!', 'success') // success alert
         } catch (error) {
-            console.error('Error during registration : ', error);
+            console.error('Error during Registration : ', error);
+            showAlert(`Error during Registration : ${error.response.data.error}`, 'error')// error alert
         }
     }
     
