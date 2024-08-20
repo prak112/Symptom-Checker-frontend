@@ -3,10 +3,11 @@ import { Stack, Typography } from '@mui/material'
 import Copyright from './Copyright'
 
 export default function Footer(){
-    return(
-        <footer>
+    return (
+        // setup responsive styling for font size
+        <footer style={{ textAlign: 'center', backgroundColor: '#f5f5f5' }}>
             <strong>DISCLAIMER : </strong>
-            <Typography>
+            <Typography style={{ fontSize: '14px' }}>
                 This is a work-in-progress project. This tool can produce false results.<br></br> 
                 It is intended for informational and learning purposes only. 
                 It is not a substitute for professional medical advice, diagnosis or treatment.<br></br> 
@@ -21,5 +22,5 @@ export default function Footer(){
             </Stack>
             <hr></hr>
         </footer>
-    )
+    );
 }
