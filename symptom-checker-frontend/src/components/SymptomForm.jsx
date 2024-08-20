@@ -1,13 +1,16 @@
+// react
 import { useState } from "react"
 import Diagnosis from "./Diagnosis"
 import symptomCheckerService from "../services/symptoms"
-
-import { ArrowBack, Send } from "@mui/icons-material"
+// material UI
+import { Send } from "@mui/icons-material"
 import { Button, TextField, Box } from "@mui/material"
 import { FormControl, FormLabel, FormControlLabel, Radio, RadioGroup  } from "@mui/material"
-import { Link } from "react-router-dom"
 
 
+/**
+ * Component for rendering a form to input symptoms and diagnose them.
+ */
 export default function SymptomForm(){
     const [loading, setLoading] = useState(false)
     const [submitted, setSubmitted] = useState(false)
@@ -15,8 +18,8 @@ export default function SymptomForm(){
     const [diagnosis, setDiagnosis] = useState([])
     const [searchType, setSearchType] = useState('general')
 
-    // center and border style
-    const boxStyle = {
+    // styles
+    const outerBoxStyle = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -28,13 +31,16 @@ export default function SymptomForm(){
         width: '50%',        // container width
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
     }
+    const innerBoxStyle = { 
+        border: '2px solid grey', 
+        borderRadius: '10px', 
+    }
+
 
     // form-level validation and user-input sanitization
     const handleInputChange = (event) => {
         const { value } = event.target;
-        // sanitize input by removing leading and trailing spaces
         const sanitizedValue = value.trim();
-        // sanitize input for SQL injection
         const sanitizedInput = sanitizedValue.replace(/[^\w\s]/g, ",");
         setSymptoms(sanitizedInput);
     }
@@ -77,7 +83,7 @@ export default function SymptomForm(){
     // render Loading screen - loading true, submitted false
     if(loading){
         return (
-        <Box sx={boxStyle}>
+        <Box sx={outerBoxStyle}>
             <div>Communicating with ICD API...</div>
             <div>Loading results...</div>
         </Box>
@@ -87,21 +93,14 @@ export default function SymptomForm(){
     if(submitted){
         return(
             <>
-            <Diagnosis data={diagnosis} />
-            <Button 
-                component={Link} to="/" 
-                endIcon={<ArrowBack />} 
-                variant='outlined'
-                onClick={returnSymptomForm}
-            >
-                Check again ?
-            </Button>
+            {/* 'Diagnosis for the symptoms : 'x', 'y', 'z' */}
+            <Diagnosis data={diagnosis} handleReturn={returnSymptomForm} />
             </>
         )
     }
 
     return(        
-        <Box sx={boxStyle}>
+        <Box sx={outerBoxStyle}>
             {/* render Symptom Form - by default, loading false, submitted false */}
             <h3 style={{textAlign: 'center'}}>List Symptoms briefly</h3>
             <form onSubmit={handleSubmit}>
@@ -123,7 +122,7 @@ export default function SymptomForm(){
                     alignItems="center"
                     gap={4}
                     p={2}
-                    sx={{ border: '2px solid grey', borderRadius: '10px' }}
+                    sx={innerBoxStyle}
                     >
                     <FormControl>
                         <FormLabel id="radio-buttons-group-label">
