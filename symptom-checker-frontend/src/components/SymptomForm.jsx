@@ -24,14 +24,16 @@ export default function SymptomForm(){
         flexDirection: 'column',
         justifyContent: 'center',
         margin: 'auto',
-        marginTop: '10vh',  // vertical adjustment
-        padding: '20px',
+        // marginTop: '10vh',  // vertical adjustment
+        padding: '10px',
         border: '1px solid #ccc',
-        borderRadius: '4px',    // rounded corners
+        borderRadius: '5px',    // rounded corners
         width: '50%',        // container width
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
     }
-    const innerBoxStyle = { 
+    const innerBoxStyle = {
+        height: '100%',
+        width: '90%', 
         border: '2px solid grey', 
         borderRadius: '10px', 
     }
@@ -93,8 +95,11 @@ export default function SymptomForm(){
     if(submitted){
         return(
             <>
-            {/* 'Diagnosis for the symptoms : 'x', 'y', 'z' */}
-            <Diagnosis data={diagnosis} handleReturn={returnSymptomForm} />
+            {diagnosis.map((diagnosisBySymptom, index) =>
+                <Box key={index} sx={outerBoxStyle}>
+                    <Diagnosis data={diagnosisBySymptom} handleReturn={returnSymptomForm} />
+                </Box> 
+            )}
             </>
         )
     }
@@ -106,17 +111,16 @@ export default function SymptomForm(){
             <form onSubmit={handleSubmit}>
                 {/* symptoms text box */}
                 <TextField 
-                    id="outlined-basic" 
+                    id="outlined-basic"
                     label="Symptoms"
                     placeholder="blocked nose, high fever,..." 
                     variant="outlined"
                     onChange={handleInputChange}
+                    fullWidth={true}
                     required 
                 />
                 {/* symptom checker choice radio buttons */}
                 <Box
-                    height={100}
-                    width={400}
                     my={4}
                     display="flex"
                     alignItems="center"
@@ -135,7 +139,14 @@ export default function SymptomForm(){
                                 value="specific" control={<Radio />} label="Specific" required/>
                         </RadioGroup>
                     </FormControl>
-                    <Button type="submit" endIcon={<Send />} variant='outlined' color='secondary'>
+                    <Button
+                        display="flex"
+                        direction="column"
+                        type="submit" 
+                        endIcon={<Send />} 
+                        variant='outlined' 
+                        color='secondary'
+                    >
                         Diagnose
                     </Button>            
                 </Box>
