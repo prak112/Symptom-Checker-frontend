@@ -20,12 +20,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 
 
-/**TO DO - Client Side Routing (CSR):
- * FEAT-Refine search results : Group symptoms result by user input with scores
- * FEAT-Encrypt : symptom data, user data with local DB_SECRET key for storage
- * FEAT-Diagnosis : Symptom form input validation and sanitization
- * FEAT-Diagnosis : Understand and build Triage system logic
-**/
+/* REFACTOR <Diagnosis />
+TO-DOs:
+=======
+- Set returnSymptomForm prop in <Home />
+- FEATURE: Show pain location in 2D-body image 
+*/
 
 
 /**
@@ -34,6 +34,11 @@ import { Route, Routes } from 'react-router-dom'
  * @returns {JSX.Element} The rendered App component.
  */
 export default function App() {
+  // styles
+  const mainDivStyle = {
+    minHeight: 'calc(100vh - 16vh)',
+  }
+
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   // handle sidebar
@@ -44,7 +49,7 @@ export default function App() {
   return (
     <AlertProvider>
     <UserProvider>
-      <div>
+      <div style={mainDivStyle}>
         <Header toggleDrawer={toggleDrawer}  />
         <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
         <Routes>
@@ -54,8 +59,8 @@ export default function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
         </Routes>
-        <Footer />
-      </div> 
+      </div>
+      <Footer /> 
     </UserProvider>
     </AlertProvider>
   )
