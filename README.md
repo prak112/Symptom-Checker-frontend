@@ -11,8 +11,8 @@
 
 
 ## Workflow
-- Sequence Diagram rendered using `mermaid`
-- Refer [Backend Workflow]()
+- Sequence Diagram rendered using *Mermaid*
+- Refer [Backend Workflow](https://github.com/prak112/Symptom-Checker-backend#workflow)
 
 ```mermaid
 sequenceDiagram
