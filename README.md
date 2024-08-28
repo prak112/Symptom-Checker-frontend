@@ -11,54 +11,91 @@
 
 
 ## Workflow
+- Sequence Diagram rendered using `mermaid`
+- Refer [Backend Workflow]()
+
 ```mermaid
 sequenceDiagram
     box Blue CLIENT
     participant UI
     participant FRONTEND
     end
+
     box Purple SERVER
     participant BACKEND
-    participant ICD11 API
-    participant DATABASE
     end
 
-    UI->>+FRONTEND: User : opens application
-    FRONTEND-->>-UI: ReactJS : renders <App />
-    loop Scheduled Renewal of Auth Token every hour
-        BACKEND->>+ICD11 API: Api Auth Middleware : controllers/auth/apiAuthController.js
-        ICD11 API-->>-BACKEND: Auth Token : Bearer, 3600 seconds validity
-    end
+    UI->>+FRONTEND: User opens application
+    FRONTEND-->>-UI: ReactJS : render <App />
+
     UI->>+FRONTEND: Auth : User registers from <Sidebar />
-    FRONTEND-->>-UI: React-Router : renders <Signup /> modal
-    UI->>+FRONTEND: Auth: User inputs information
-    FRONTEND->>+BACKEND: Auth : call registerUser in services/auth.js
-    BACKEND->>+DATABASE: Auth : create user in 'user' collection
-    DATABASE-->>-BACKEND: Auth: return non-critical user information
-    BACKEND-->>-FRONTEND: Auth : showAlert state success
-    FRONTEND-->>-UI: Auth : redirects to <Login /> modal
-    UI->>+FRONTEND: Auth : User enters login credentials
-    FRONTEND->>+BACKEND: Auth : call authenticateUser in services/auth.js
-    BACKEND->>+DATABASE: Auth : verify User login credentials
-    DATABASE-->>-BACKEND: Auth : User exists
-    BACKEND-->>-FRONTEND: Auth : sessionStorage created, 'auth_token' packed in httpCookie
-    FRONTEND-->>-UI: Auth : User-specific session created
+    FRONTEND-->>-UI: React Router : render <Signup /> modal
+    alt Registration Valid
+        UI->>+FRONTEND: Auth: User inputs information
+        Note over FRONTEND: <Signup /> validation - PASSED
+        FRONTEND->>+BACKEND: Auth Service : POST /public/auth/signup
+        Note over BACKEND: Backend-Database validation - PASSED   
+        BACKEND-->>-FRONTEND: Auth Controller : return User {username: '', symptom: []}
+        Note over FRONTEND: <AlertProvider /> state success
+        FRONTEND-->>-UI: React Router : redirect to <Login /> modal
+    else Frontend Validation Error
+        UI->>+FRONTEND: Auth: User inputs information
+        Note over FRONTEND: <Signup /> validation - FAILED
+        Note over FRONTEND: <AlertProvider /> state error
+        FRONTEND-->>-UI: Alert Context : <AlertProvider /> show notification banner
+    else Backend-Database Validation Error
+        UI->>+FRONTEND: Auth: User inputs information
+        Note over FRONTEND: <Signup /> validation - PASSED
+        FRONTEND->>+BACKEND: Auth Service : POST /public/auth/signup
+        Note over BACKEND: Backend-Database validation - FAILED
+        BACKEND-->>-FRONTEND: Auth Controller : ErrorHandler forwards response
+        FRONTEND-->>-UI: Alert Context : <AlertProvider /> show notification banner
+    end
+    alt Valid Login
+        UI->>+FRONTEND: Auth : User enters login credentials
+        Note over FRONTEND: <Login /> validation - PASSED
+        FRONTEND->>+BACKEND: Auth Service : POST /public/auth/login
+        Note over BACKEND: Backend-Database validation - PASSED
+        BACKEND-->>-FRONTEND: Auth Controller : sessionStorage created<br>'auth_token' packed in Request Header
+        Note over FRONTEND: <AlertProvider /> state success
+        Note over FRONTEND: <AlertProvider /> show notification banner
+        FRONTEND-->>-UI: User Context : User-specific session created
+    else Frontend Validation Error
+        UI->>+FRONTEND: Auth: User inputs information
+        Note over FRONTEND: <Login /> validation - FAILED
+        Note over FRONTEND: <AlertProvider /> state error
+        FRONTEND-->>-UI: Alert Context : <AlertProvider /> show notification banner
+    else Backend-Database Validation Error
+        UI->>+FRONTEND: Auth: User inputs information
+        Note over FRONTEND: <Login /> validation - PASSED
+        FRONTEND->>+BACKEND: Auth Service : POST /public/auth/login
+        Note over BACKEND: Backend-Database validation - FAILED
+        BACKEND-->>-FRONTEND: Auth Controller : ErrorHandler forwards response
+        Note over FRONTEND: <AlertProvider /> state error
+        FRONTEND-->>-UI: Alert Context : <AlertProvider /> shows notification banner
+    end
 
-    UI->>+FRONTEND: User : inputs symptoms in <SymptomForm />
-    FRONTEND->>+BACKEND: Request : <SymptomForm /> via services/symptoms.js 
-    BACKEND->>+DATABASE: Data Encryption : controllers/symptomChecker.js via models/symptom.js to MongoDB
-    BACKEND->>+ICD11 API: Diagnose symptoms : controllers/symptomChecker.js
-    ICD11 API-->>-BACKEND: Results from ICD : diagnosis with reference URIs
-    BACKEND->>+ICD11 API: Lookup reference URIs : controllers/utils/lookupSearchData.js 
-    ICD11 API-->>-BACKEND: Results from ICD : detailed info about each diagnosis
-    BACKEND->>+DATABASE: Data Encryption : diagnosisData from controllers/symptomChecker.js via models/symptom.js to MongoDB
-    BACKEND->>-FRONTEND: Response : returns diagnosisData to <SymptomForm />
-    FRONTEND-->>-UI: <SymptomForm /> : renders <Diagnosis />
-
+    alt Valid Input <SymptomForm />
+        UI->>+FRONTEND: User : inputs symptoms in <SymptomForm />
+        Note over FRONTEND: <SymptomForm /> validation - PASSED
+        FRONTEND->>+BACKEND: POST /api/protected/symptoms/general or /specific
+	    Note over BACKEND: Validate and Sanitize User input  
+        BACKEND-->>-FRONTEND: SymptomChecker Controller: diagnosisData {'topResult': {}, 'includedResults': {}, 'excludedResults': {}}
+        FRONTEND-->>-UI: <SymptomForm /> : render <Diagnosis />
+    else No Input <SymptomForm />
+        UI->>+FRONTEND: User : User clicks 'Diagnose' without input
+        Note over FRONTEND: <SymptomForm /> validation - FAILED
+        FRONTEND-->>-UI: prompt User to fill form
+    end
     UI->>+FRONTEND: Auth : User logs out from <Sidebar />
     FRONTEND-->>-UI: Auth : <Logout /> modal asks confirmation
-    UI->>+FRONTEND: Auth : User confirms logout
-    FRONTEND-->>-UI: Auth : sessionStorage cleared, user redirected to <App />
+    alt User confirms Logout
+        UI->>+FRONTEND: Auth : User confirms logout
+        FRONTEND-->>-UI: User Context : sessionStorage cleared, User redirected to <App />
+    else User cancels Logout
+        UI->>+FRONTEND: Auth : User cancels logout
+        FRONTEND-->>-UI: Auth : User redirected to <App />
+    end
 ```
 
 <hr>
