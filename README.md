@@ -119,4 +119,16 @@ sequenceDiagram
 - Run the development server
 ```bash
     npm run dev
-``` 
+```
+
+<hr>
+<br>
+
+# Credits
+- **Coding Assistants** : 
+    - GitHub Copilot
+    - Pieces Copilot
+- **Documentation Tool** : Mermaid
+
+<hr>
+<hr>
