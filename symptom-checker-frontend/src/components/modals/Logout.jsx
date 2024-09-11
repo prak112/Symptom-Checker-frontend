@@ -7,8 +7,9 @@ import Copyright from '../Copyright';
 // context
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserContext } from '../../contexts/UserContext'
-import { useAlert } from '../../contexts/useAlert';
+// import { UserContext } from '../../contexts/UserContext'
+// import { useAlert } from '../../contexts/useAlert';
+import { AuthenticationContext } from '../../contexts/AuthenticationContext';
 
 
 // styles
@@ -48,20 +49,25 @@ const modalStyle = {
  * @returns {JSX.Element} The LogoutModal component.
  */
 export default function LogoutModal({ open, handleClose }){
-    const { setUser } = useContext(UserContext)
-    const showAlert = useAlert()
+    // const { setUser } = useContext(UserContext)
+    // const showAlert = useAlert()
+    const { clearUserSession } = useContext(AuthenticationContext)
+
     const navigate = useNavigate()
 
-    const handleLogout = () => {
-        try {
-            setUser(null)
-            window.sessionStorage.removeItem('authenticatedUser')
-            navigate('/')
-            showAlert('Logged out successfully.', 'success')
-        } catch (error) {
-            console.error('Error during Logout : ', error)
-            showAlert(`Error during Logout : ${error.response.data.error}`, 'error')        
-        }
+    // Auth service handler - TO Be Moved to <AuthenticationContext />
+    const handleLogout = async() => {
+        // try {
+        //     setUser(null)
+        //     window.sessionStorage.removeItem('authenticatedUser')
+        //     navigate('/')
+        //     showAlert('Logged out successfully.', 'success')
+        // } catch (error) {
+        //     console.error('Error during Logout : ', error)
+        //     showAlert(`Error during Logout : ${error.response.data.error}`, 'error')        
+        // }
+        await clearUserSession()
+        navigate('/')
     }
 
     return(

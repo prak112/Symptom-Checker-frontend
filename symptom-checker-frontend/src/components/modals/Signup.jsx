@@ -9,11 +9,14 @@ import { LoginOutlined } from '@mui/icons-material';
 import PropTypes from 'prop-types'
 import Copyright from '../Copyright'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 // resources
-import authServices from '../../services/auth'
 import Logo from '../../assets/logo.svg'
-import { useAlert } from '../../contexts/useAlert';
+// services
+// import authServices from '../../services/auth'
+// context
+import { AuthenticationContext } from '../../contexts/AuthenticationContext';
+// import { useAlert } from '../../contexts/useAlert';
 
 // styles
 const boxStyle = {
@@ -57,35 +60,53 @@ const modalStyle = {
  */
 export default function SignupModal({ open, handleClose }) {
     // setup states
-    const [username, setUsername] = useState(null)
-    const [password, setPassword] = useState(null)
-    const [showPassword, setShowPassword] = useState(true)
-    const showAlert = useAlert()
     const navigate = useNavigate()
+    // const [username, setUsername] = useState(null)
+    // const [password, setPassword] = useState(null)
+    const [credentials, setCredentials] = useState({ username: '', password: '' })
+    const [showPassword, setShowPassword] = useState(true)
     
+    // setup context
+    // const showAlert = useAlert()
+    const { registerUser } = useContext(AuthenticationContext)
+
     // reroute to login
     const loginRedirect = () => {
         navigate("/auth?public=login")
     }
-    // Auth service handler
-    const registerUser = async (event) => {
+
+    // Credentials event handler
+    const handleCredentialsChange = (event) => {
+        const { name, value } = event.target
+        setCredentials({ ...credentials, [name]: value })
+    }
+
+    // Auth service handler - TO Be Moved to <AuthenticationContext />
+    // const registerUser = async (event) => {
+    //     event.preventDefault()
+    //     try {
+    //         console.log(`Username: ${username}\nPassword: ${password}`)
+    //         const userInfoPayload = {
+    //             username: username,
+    //             password: password
+    //         }
+    //         const registrationResult = await authServices.registerUser(userInfoPayload)
+    //         console.log('RESULT: ', registrationResult)
+    //         setUsername(null)
+    //         setPassword(null)
+    //         loginRedirect() // after successful registration
+    //         showAlert('Signed up successfully!', 'success') // success alert
+    //     } catch (error) {
+    //         console.error('Error during Registration : ', error);
+    //         showAlert(`Error during Registration : ${error.response.data.error}`, 'error')// error alert
+    //     }
+    // }
+
+    // Registration event handler
+    const handleRegistration = (event) => {
         event.preventDefault()
-        try {
-            console.log(`Username: ${username}\nPassword: ${password}`)
-            const userInfoPayload = {
-                username: username,
-                password: password
-            }
-            const registrationResult = await authServices.registerUser(userInfoPayload)
-            console.log('RESULT: ', registrationResult)
-            setUsername(null)
-            setPassword(null)
-            loginRedirect() // after successful registration
-            showAlert('Signed up successfully!', 'success') // success alert
-        } catch (error) {
-            console.error('Error during Registration : ', error);
-            showAlert(`Error during Registration : ${error.response.data.error}`, 'error')// error alert
-        }
+        registerUser(credentials)
+        loginRedirect()
     }
     
     if(!open) return null;
@@ -108,24 +129,28 @@ export default function SignupModal({ open, handleClose }) {
                             Symptom Checker and Triage System
                         </Typography> 
                     </div>
-                        <form onSubmit={registerUser} style={formStyle}>
+                        <form onSubmit={handleRegistration} style={formStyle}>
                             <TextField 
                                 id="username"
+                                name="username"
+                                value={credentials.username}
                                 type="text" 
                                 label="Username"
                                 placeholder="Username" 
                                 variant="outlined"
                                 required
-                                onChange={(e)=>setUsername(e.target.value)}
+                                onChange={handleCredentialsChange}
                             />
                             <TextField 
                                 id="password"
+                                name="password"
+                                value={credentials.password}
                                 type={showPassword ? "text" : "password"} 
                                 label="Password"
                                 placeholder="Password" 
                                 variant="outlined"
                                 required
-                                onChange={(e)=>setPassword(e.target.value)}
+                                onChange={handleCredentialsChange}
                             />
                             <FormControlLabel
                                 control={

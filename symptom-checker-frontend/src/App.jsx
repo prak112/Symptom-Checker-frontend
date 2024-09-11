@@ -2,6 +2,7 @@
 // context
 import { UserProvider } from './contexts/UserContext'
 import { AlertProvider } from './contexts/AlertContext'
+import { AuthenticationProvider } from './contexts/AuthenticationContext'
 // components
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
@@ -18,6 +19,7 @@ import FAQ from './pages/Faqs'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
+import AuthenticationPrompt from './components/modals/AuthenticationPrompt'
 
 
 /* REFACTOR <Diagnosis />
@@ -40,28 +42,37 @@ export default function App() {
   }
 
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(true)
 
   // handle sidebar
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen)
   }
 
+  // handle Authentication Prompt close event
+  const handleAuthPromptClose = () => {
+    setIsAuthPromptOpen(false)
+  }
+
   return (
     <AlertProvider>
-    <UserProvider>
-      <div style={mainDivStyle}>
-        <Header toggleDrawer={toggleDrawer}  />
-        <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
-          <Route path="/faqs" element={<FAQ />}/>
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
-        </Routes>
-      </div>
-      <Footer /> 
-    </UserProvider>
+      <UserProvider>
+        <AuthenticationProvider>
+          <div style={mainDivStyle}>
+            <Header toggleDrawer={toggleDrawer}  />
+            <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
+              <Route path="/faqs" element={<FAQ />}/>
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
+            </Routes>
+          </div>
+          <Footer />
+          <AuthenticationPrompt open={isAuthPromptOpen} handleClose={handleAuthPromptClose}/>
+          </AuthenticationProvider>
+      </UserProvider>
     </AlertProvider>
   )
 }
@@ -94,7 +105,7 @@ function ModalWrapper() {
     />
     )
   }
-  else {  // signup if neither
+  else if(queryType === 'signup') { 
     return(
       <SignupModal 
         open={location.pathname === '/auth'}
