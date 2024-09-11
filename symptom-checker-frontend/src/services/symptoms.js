@@ -8,7 +8,7 @@ const getGeneralDiagnosis = async(symptoms) => {
         const response = await axios.post(`${baseUrl}/general`, symptoms)
         return response.data
     } catch (error) {
-        console.log(error)
+        console.error('Error during General search : ', error)
         throw error;
     }
 }
@@ -19,9 +19,25 @@ const getSpecificDiagnosis = async(symptoms) => {
         const response = await axios.post(`${baseUrl}/specific`, symptoms)
         return response.data
     } catch (error) {
-        console.log(error)
+        console.error('Error during Specific search : ', error)
         throw error;
     }
 }
 
-export default { getSpecificDiagnosis, getGeneralDiagnosis }
+// GET - Get User History
+const getUserHistory = async(userInformation) => {
+    try {
+        const response = await axios.get(`${baseUrl}/history`, userInformation)
+        return response.data
+    } catch (error) {
+        console.error('Error during User History retrieval : ', error)
+        throw error;
+    }
+}
+
+
+export default { 
+    getSpecificDiagnosis, 
+    getGeneralDiagnosis,
+    getUserHistory,
+}
