@@ -2,22 +2,23 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
-import { UserContext } from '../contexts/UserContext'
+import { useLocation } from 'react-router-dom'
 // materialUI 
-import { 
-    Drawer, List, ListItemButton, ListItemIcon, ListItemText 
-} from '@mui/material'
-import { 
-    ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark 
-} from '@mui/icons-material'
-import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark, PermIdentityOutlined } 
+from '@mui/icons-material'
+// context
+import { UserContext } from '../contexts/UserContext'
 // resources
 import Logo from '../assets/logo.svg'
 
 
 export default function Sidebar({ open, toggleDrawer }){    
-    // get user info
+    // setup context and location
     const { user } = useContext(UserContext)
+    const location = useLocation()
+
+    // styles
     const sidebarStyles = {
         drawer: {
             background: 'linear-gradient(to right, #A3D1CC, #536B68)',
@@ -54,30 +55,32 @@ export default function Sidebar({ open, toggleDrawer }){
                     width={60} height={60} 
                     />
                 </ListItemIcon>
-                <Link to="/" style={sidebarStyles.link}>
-                    <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <HomeOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary="Home" />
-                    </ListItemButton>
-                </Link>
+                {location.pathname !== '/' && (
+                    <Link to="/" style={sidebarStyles.link}>
+                        <ListItemButton sx={sidebarStyles.listItemButton}>
+                            <ListItemIcon>
+                                <HomeOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary="Home" />
+                        </ListItemButton>
+                    </Link>
+                )}
                 {/* if user authenticated render 'Profile' else 'Signup/Login' */}
                 {user 
                 ? (<Link to="/profile" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
                         <ListItemIcon>
-                            <PermIdentityOutlinedIcon />
+                            <PermIdentityOutlined />
                         </ListItemIcon>
                         <ListItemText primary="Profile" />
                     </ListItemButton>
                     </Link>)
-                : (<Link to="/auth" style={sidebarStyles.link}>
+                : (<Link to="/auth?public=login" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
                         <ListItemIcon>
                             <AppRegistrationOutlined />
                         </ListItemIcon>
-                        <ListItemText primary="Sign up/Login" />
+                        <ListItemText primary="Login" />
                     </ListItemButton>
                     </Link>)
                 }
@@ -91,8 +94,7 @@ export default function Sidebar({ open, toggleDrawer }){
                 </Link>
                 {/* if user authenticated render 'Logout' */}
                 {user 
-                ? (
-                    <Link to="/auth?public=logout" style={sidebarStyles.link}>
+                ? (<Link to="/auth?public=logout" style={sidebarStyles.link}>
                         <ListItemButton sx={sidebarStyles.listItemButton}>
                             <ListItemIcon>
                                 <ExitToAppOutlined />
