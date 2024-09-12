@@ -1,10 +1,3 @@
-/**
- * Consists of auth service handlers
-    * createGuest 
-    * signup
-    * login
-    * logout
- */
 // react
 import { createContext, useContext, useState } from "react";
 import PropTypes from 'prop-types'
@@ -38,7 +31,7 @@ export function AuthenticationProvider({ children }) {
     const authenticateGuestUser = async () => {
         try {
             const guestUser = await authServices.createGuestUser()
-            setUser(guestUser)
+            setUser(guestUser.username)
             setIsAuthenticated(true)
             showAlert('Guest user access authorized.', 'success')
         } catch (error) {
@@ -68,6 +61,7 @@ export function AuthenticationProvider({ children }) {
         try {
             console.log(`Username: ${credentials.username}\nPassword: ${credentials.password}`)
             const authorizedUser = await authServices.authenticateUser(credentials)
+            console.log('Authenticated user id : ', authorizedUser)
             // store username in sessionStorage for global access 
             window.sessionStorage.setItem('authenticatedUser', authorizedUser.username)
             setUser(authorizedUser.username)
@@ -79,12 +73,12 @@ export function AuthenticationProvider({ children }) {
         }
     } 
 
-    // clear user session
+    // clear user session (logout)
     const clearUserSession = async() => {
         try {
-            setUser(null)
             window.sessionStorage.removeItem('authenticatedUser')
             await authServices.invalidateUserSession()
+            setUser(null)
             setIsAuthenticated(false)
             showAlert('Logged out successfully.', 'success')
         } catch (error) {
