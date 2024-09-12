@@ -1,12 +1,12 @@
 // imports
 // context
-import { UserProvider } from './contexts/UserContext'
-import { AlertProvider } from './contexts/AlertContext'
-import { AuthenticationProvider } from './contexts/AuthenticationContext'
+// import { UserProvider } from './contexts/UserContext'
+// import { AlertProvider } from './contexts/AlertContext'
+import { AuthenticationContext, } from './contexts/AuthenticationContext'
 // components
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
-import Footer from './components/Footer'
+// import Footer from './components/Footer'
 // modals
 import SignupModal from './components/modals/Signup'
 import LoginModal from './components/modals/Login'
@@ -16,18 +16,10 @@ import Home from './pages/Home'
 import UserProfile from './pages/UserProfile'
 import FAQ from './pages/Faqs'
 // react
-import { useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import AuthenticationPrompt from './components/modals/AuthenticationPrompt'
-
-
-/* REFACTOR <Diagnosis />
-TO-DOs:
-=======
-- Set returnSymptomForm prop in <Home />
-- FEATURE: Show pain location in 2D-body image 
-*/
 
 
 /**
@@ -41,8 +33,10 @@ export default function App() {
     minHeight: 'calc(100vh - 16vh)',
   }
 
+  // setup state and context
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(true)
+  const [authPromptOpen, setAuthPromptOpen] = useState(true)
+  const { isAuthenticated } = useContext(AuthenticationContext)
 
   // handle sidebar
   const toggleDrawer = () => {
@@ -50,30 +44,35 @@ export default function App() {
   }
 
   // handle Authentication Prompt close event
-  const handleAuthPromptClose = () => {
-    setIsAuthPromptOpen(false)
-  }
+  const verifyUserAuth = useCallback(() => {
+    setAuthPromptOpen(!isAuthenticated)
+  }, [isAuthenticated])
+
+  // monitor state changes of isAuthenticated
+  useEffect(() => {
+    verifyUserAuth()
+  }, [isAuthenticated, verifyUserAuth])
+ 
 
   return (
-    <AlertProvider>
-      <UserProvider>
-        <AuthenticationProvider>
-          <div style={mainDivStyle}>
-            <Header toggleDrawer={toggleDrawer}  />
-            <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
-              <Route path="/faqs" element={<FAQ />}/>
-              <Route path="/profile" element={<UserProfile />} />
-              <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
-            </Routes>
-          </div>
-          <Footer />
-          <AuthenticationPrompt open={isAuthPromptOpen} handleClose={handleAuthPromptClose}/>
-          </AuthenticationProvider>
-      </UserProvider>
-    </AlertProvider>
+    // <AlertProvider>
+    //   <UserProvider>
+    //     <AuthenticationProvider>
+            <div style={mainDivStyle}>
+              <Header toggleDrawer={toggleDrawer}  />
+              <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
+                <Route path="/faqs" element={<FAQ />}/>
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
+              </Routes>
+              <AuthenticationPrompt open={authPromptOpen} handleClose={verifyUserAuth}/>
+            </div>
+    //     </AuthenticationProvider>
+    //   </UserProvider>
+    // </AlertProvider>
   )
 }
 
@@ -105,7 +104,7 @@ function ModalWrapper() {
     />
     )
   }
-  else if(queryType === 'signup') { 
+  else { 
     return(
       <SignupModal 
         open={location.pathname === '/auth'}
