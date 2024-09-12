@@ -1,11 +1,6 @@
-/** DEBUG
- * AuthPrompt modal does not close after chosing 'Continue as Guest'
- * FRONTEND doesn't recognize registered Guest user, BACKEND recognizes Guest user
- * 'Diagnose' button works fine but UI doesn't change to <Diagnosis />
- */
-
 // materialUI
-import { Modal, Box, Button, Typography, Divider } from '@mui/material'
+import { Modal, Box, Button, Typography, Divider, FormHelperText, Stack } from '@mui/material'
+import { Chalet, HowToRegOutlined } from '@mui/icons-material'
 // react
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
@@ -39,10 +34,10 @@ export default function AuthenticationPrompt({ open, handleClose }) {
    const { authenticateGuestUser } = useContext(AuthenticationContext)
    const navigate = useNavigate()
 
-   // 
+   // handle user registration preference
    const handleGuestLogin = () => {
       authenticateGuestUser()
-      navigate('/')
+      handleClose()
    }
 
    const handleRegistration = () => {
@@ -52,7 +47,11 @@ export default function AuthenticationPrompt({ open, handleClose }) {
 
 
    return (
-      <Modal open={open} onClose={handleClose}>
+      <Modal 
+        open={open} 
+        onClose={handleClose}
+        aria-labelledby="auth-modal"
+      >
         <Box sx={boxStyle}>
         <div style={{display: 'flex', justifyContent:'center'}}>
             <img src={Logo} alt='Logo' 
@@ -70,12 +69,32 @@ export default function AuthenticationPrompt({ open, handleClose }) {
             Would you like to continue as a Guest or as a registered User?
           </Typography>
           <Divider sx={{ my: 2 }} />
-          <Button variant="contained" color="primary" onClick={handleGuestLogin}>
-            Continue as Guest
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleRegistration}>
-            Sign up / Login
-          </Button>
+          <Stack spacing={2}>
+            <Button 
+                onClick={handleGuestLogin} 
+                endIcon={<Chalet />} 
+                variant="outlined" 
+                color="info" 
+            >
+                Continue as Guest 
+            </Button>
+            <Button 
+                type="submit" 
+                endIcon={<HowToRegOutlined />} 
+                variant="outlined" 
+                color="secondary"
+                onClick={handleRegistration}
+            >
+                Sign Me up!
+            </Button>
+          </Stack>
+          <Divider sx={{ my: 2 }} />
+          <FormHelperText id="helper-text" sx={{ my: 2 }}>
+            All your data and symptom data is <em>ALWAYS end-to-end encrypted</em>,
+            for both user types, Guests and Registered.<br/>
+            <strong>Guest Users</strong> have <strong>temporary access</strong> to their search history.<br/>
+            <strong>Registered Users</strong> have <strong>permanent access</strong> to their search history.
+          </FormHelperText>
         </Box>
       </Modal>
     )
