@@ -1,11 +1,23 @@
 // react
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { useNavigate } from "react-router-dom"
+// component
 import Diagnosis from "./Diagnosis"
+// services
 import symptomCheckerService from "../services/symptoms"
 // material UI
 import { Send } from "@mui/icons-material"
-import { Button, TextField, Box } from "@mui/material"
+import { Button, TextField, Box, FormHelperText } from "@mui/material"
 import { FormControl, FormLabel, FormControlLabel, Radio, RadioGroup  } from "@mui/material"
+// context
+import { AuthenticationContext } from '../contexts/AuthenticationContext'
+import { useAlert } from "../contexts/useAlert"
+/**
+ * DONE - Add UserContext/AuthenticateUserContext
+ * Verify user in handleSubmit and save input to execute after authentication
+    * If un-authenticated, Navigate user to <AuthenticateUser />
+    * If authenticated, Create <UserHistory /> in <Sidebar />
+ */
 
 
 /**
@@ -16,7 +28,11 @@ export default function SymptomForm(){
     const [submitted, setSubmitted] = useState(false)
     const [symptoms, setSymptoms] = useState("")
     const [diagnosis, setDiagnosis] = useState([])
-    const [searchType, setSearchType] = useState('general')
+    const [searchType, setSearchType] = useState("general")
+    const [analysisType, setAnalysisType] = useState("panel")
+    const navigate = useNavigate()
+    const { isAuthenticated } = useContext(AuthenticationContext)
+    const showAlert = useAlert()
 
     // styles
     const outerBoxStyle = {
@@ -37,6 +53,11 @@ export default function SymptomForm(){
         border: '2px solid grey', 
         borderRadius: '10px', 
     }
+    const centeredDivStyle = {
+        width: "50%",
+        paddingTop: "20px",
+        margin: "0 auto"
+    }
 
 
     // form-level validation and user-input sanitization
@@ -47,21 +68,36 @@ export default function SymptomForm(){
         setSymptoms(sanitizedInput);
     }
     
-    // manage search type selection
+    // manage search and analysis type selections
     const handleSearchType = (event) => {
         setSearchType(event.target.value)
+        console.log('Search type : ', searchType)        
+    }
+
+    const handleAnalysisType = (event) => {
+        setAnalysisType(event.target.value)
+        console.log('Analysis type: ', analysisType)
+    }
+
+    const handleUserVerification = () => {
+        if(!isAuthenticated) {
+            showAlert('User does not exist. Please register to access the service.', 'error')
+            navigate('/auth?public=login');
+        } 
+        console.log('User verification complete')
     }
 
     // manage symptom form submit to redirect request based on searchType
     const handleSubmit = async(event) => {
         event.preventDefault()
-        setLoading(true)
         const symptomsPayload = { 
             symptoms: symptoms.split(',').map((symptom) => symptom.trim()),
+            analysis: analysisType
         }
-        console.log('Symptoms List : ', symptomsPayload.symptoms)
-
+        console.log('Symptoms List : ', symptomsPayload)
         let diagnosisData = [];
+        setLoading(true)
+
         if(searchType === 'general'){
             diagnosisData = await symptomCheckerService.getGeneralDiagnosis(symptomsPayload)
             console.log('General Diagnosis DATA : ', diagnosisData)
@@ -76,7 +112,7 @@ export default function SymptomForm(){
             setSubmitted(true)
         }, 2000)    
     }
-    
+
     // reroute back to SymptomForm
     const returnSymptomForm = () => {
         setSubmitted(false);
@@ -86,8 +122,12 @@ export default function SymptomForm(){
     if(loading){
         return (
         <Box sx={outerBoxStyle}>
-            <div>Communicating with ICD API...</div>
-            <div>Loading results...</div>
+            <div style={centeredDivStyle}>
+                <p>Communicating with ICD API...</p>
+                <p>Loading results...</p>
+                <p>Max Waiting Time for <em>&apos;General&apos;</em> search : <em>~12 seconds</em></p>
+                <p>Max Waiting Time for <em>&apos;Specific&apos;</em> search : <em>~1 second</em></p>
+            </div>
         </Box>
         )
     }
@@ -132,20 +172,58 @@ export default function SymptomForm(){
                         <FormLabel id="radio-buttons-group-label">
                             Choose Symptom Checker type
                         </FormLabel>
-                        <RadioGroup row name="radio-buttons-group" onChange={handleSearchType} >
+                        <RadioGroup 
+                            row 
+                            name="radio-buttons-group" 
+                            defaultValue="general"
+                            onChange={handleSearchType} 
+                        >
                             <FormControlLabel 
-                                value="general" control={<Radio />} label="General" required/>
+                                value="general" control={<Radio />} label="General" />
                             <FormControlLabel 
                                 value="specific" control={<Radio />} label="Specific" required/>
                         </RadioGroup>
+                        <FormHelperText>
+                            {/* simplify explanation */}
+                            &apos;General&apos; - Multiple possible diagnosis.<br /> 
+                            &apos;Specific&apos; - Top scored diagnosis.
+                            <b><a title="Score is a value between 0 and 1. Higher the score, better the match."> (score calculated by  by ICD)</a></b>
+                        </FormHelperText>
+                        <RadioGroup 
+                            row 
+                            name="radio-buttons-group"
+                            defaultValue="panel" 
+                            onChange={handleAnalysisType} 
+                        >
+                            <FormControlLabel 
+                                value="panel" 
+                                control={<Radio />} 
+                                label="Panel"
+                                title="For diagnosing multiple symptoms at once" 
+                                required
+                            />
+                            <FormControlLabel 
+                                value="assessment" 
+                                control={<Radio />} 
+                                label="Assessment"
+                                title="For detailed symptom-by-symptom diagnosis " 
+                                required
+                            />
+                        </RadioGroup>
+                        <FormHelperText>
+                            {/* simplify explanation */}
+                            &apos;Panel&apos; - Single diagnosis for all symptoms.<br />
+                            &apos;Assessment&apos; - Multiple diagnoses for each symptom.
+                        </FormHelperText>
                     </FormControl>
                     <Button
                         display="flex"
-                        direction="column"
+                        direction="row"
                         type="submit" 
                         endIcon={<Send />} 
                         variant='outlined' 
                         color='secondary'
+                        onClick={handleUserVerification}
                     >
                         Diagnose
                     </Button>            
