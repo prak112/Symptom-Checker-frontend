@@ -17,15 +17,15 @@ export default function Header({ toggleDrawer }){
     const { user } = useContext(UserContext)
     const appBarStyle = {
         background: 'linear-gradient(45deg, #FFC107 30%, #FFEB3B 90%)',
-        padding:  '10px',
+        py: '10',
+        my: '5',
+        mx: '5'
     }
     const toolBarStyle = {
         display: 'flex',
         justifyContent: 'center',
         paddingRight: '200px',
     }
-
-    // username to render in <Avatar>
 
     return(
         <AppBar position="relative" sx={appBarStyle} >
@@ -38,9 +38,11 @@ export default function Header({ toggleDrawer }){
                 >
                     <MenuIcon fontSize='large' />
                 </IconButton>
-                <img src={Logo} alt='Logo' 
-                    width={75} height={75} 
-                    style={{paddingRight: '50px', paddingLeft: '25px'}}/> 
+                <Link to="/">
+                    <img src={Logo} alt='Logo' 
+                        width={75} height={75} 
+                        style={{paddingRight: '50px', paddingLeft: '25px'}}/> 
+                </Link>
                 <Typography variant="h4" align="center" color="primary">
                     Symptom Checker
                 </Typography>
@@ -50,7 +52,7 @@ export default function Header({ toggleDrawer }){
                     <Avatar 
                         sx={{ bgcolor: blue[200] }} 
                         variant="rounded"
-                        alt={user}
+                        alt={user.username}
                     >
                         <PermIdentityOutlinedIcon />
                     </Avatar>
