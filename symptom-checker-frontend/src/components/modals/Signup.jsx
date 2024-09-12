@@ -3,7 +3,7 @@ import { Box, Button, Modal, Typography, Stack, Divider } from '@mui/material'
 import { 
     TextField, FormControlLabel, Checkbox, FormHelperText 
 } from '@mui/material'
-import { HowToRegOutlined } from '@mui/icons-material';
+import { Chalet, HowToRegOutlined } from '@mui/icons-material';
 import { LoginOutlined } from '@mui/icons-material';
 // react
 import PropTypes from 'prop-types'
@@ -68,7 +68,7 @@ export default function SignupModal({ open, handleClose }) {
     
     // setup context
     // const showAlert = useAlert()
-    const { registerUser } = useContext(AuthenticationContext)
+    const { authenticateGuestUser, registerUser } = useContext(AuthenticationContext)
 
     // reroute to login
     const loginRedirect = () => {
@@ -101,6 +101,12 @@ export default function SignupModal({ open, handleClose }) {
     //         showAlert(`Error during Registration : ${error.response.data.error}`, 'error')// error alert
     //     }
     // }
+
+    // handle user registration preference
+    const handleGuestLogin = () => {
+        authenticateGuestUser()
+        handleClose()
+    }
 
     // Registration event handler
     const handleRegistration = (event) => {
@@ -173,6 +179,18 @@ export default function SignupModal({ open, handleClose }) {
                             >
                                 Sign Me up!
                             </Button>
+                            <Divider />
+                            <Stack spacing={2}>
+                                <Button 
+                                    onClick={handleGuestLogin} 
+                                    endIcon={<Chalet />} 
+                                    variant="outlined" 
+                                    color="info" 
+                                >
+                                    Continue as Guest 
+                                </Button>
+                                <Divider />
+                            </Stack>
                         </form>
                         <Divider />
                         <Stack spacing={2}>
