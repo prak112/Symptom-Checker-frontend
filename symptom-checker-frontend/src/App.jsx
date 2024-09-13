@@ -13,7 +13,7 @@ import LoginModal from './components/modals/Login'
 import LogoutModal from './components/modals/Logout'
 // pages
 import Home from './pages/Home'
-import UserProfile from './pages/UserProfile'
+import UserHistory from './pages/UserHistory'
 import FAQ from './pages/Faqs'
 // react
 import { useCallback, useContext, useEffect, useState } from 'react'
@@ -43,7 +43,7 @@ export default function App() {
     setDrawerOpen(!drawerOpen)
   }
 
-  // handle Authentication Prompt close event
+  // by default, push user to authenticate before using the service
   const verifyUserAuth = useCallback(() => {
     setAuthPromptOpen(!isAuthenticated)
   }, [isAuthenticated])
@@ -53,26 +53,23 @@ export default function App() {
     verifyUserAuth()
   }, [isAuthenticated, verifyUserAuth])
  
+  // const hideAuthPrompt = () => {
+  //   setAuthPromptOpen(!authPromptOpen)
+  // }
 
   return (
-    // <AlertProvider>
-    //   <UserProvider>
-    //     <AuthenticationProvider>
-            <div style={mainDivStyle}>
-              <Header toggleDrawer={toggleDrawer}  />
-              <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
-                <Route path="/faqs" element={<FAQ />}/>
-                <Route path="/profile" element={<UserProfile />} />
-                <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
-              </Routes>
-              <AuthenticationPrompt open={authPromptOpen} handleClose={verifyUserAuth}/>
-            </div>
-    //     </AuthenticationProvider>
-    //   </UserProvider>
-    // </AlertProvider>
+    <div style={mainDivStyle}>
+      <Header toggleDrawer={toggleDrawer}  />
+      <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
+        <Route path="/faqs" element={<FAQ />}/>
+        <Route path="/history" element={<UserHistory />} />
+        <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
+      </Routes>
+      <AuthenticationPrompt open={authPromptOpen} handleClose={verifyUserAuth}/>
+    </div>
   )
 }
 
