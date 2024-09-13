@@ -91,13 +91,15 @@ export default function LogoutModal({ open, handleClose }){
                             onClick={handleLogout}
                             variant="contained" 
                             color="warning" 
-                            endIcon={<LogoutOutlinedIcon />}>
+                            endIcon={<LogoutOutlinedIcon />}
+                        >
                             Logout ?
                         </Button>
                         <Button 
                             onClick={() => navigate('/')} 
                             variant="outlined"
-                            color="secondary" >
+                            color="secondary" 
+                        >
                             Cancel
                         </Button>
                         <Divider />
