@@ -47,9 +47,9 @@ export default function OtherDiagnosis({ resultSet, type }){
 
 OtherDiagnosis.propTypes = {
     resultSet: PropTypes.shape({
-        label: PropTypes.array.isRequired,
-        score: PropTypes.array.isRequired,
-        url: PropTypes.array.isRequired,
+        label: PropTypes.array,
+        score: PropTypes.array,
+        url: PropTypes.array,
     }).isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.string,
 }
