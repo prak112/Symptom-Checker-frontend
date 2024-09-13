@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/protected/symptoms': {
+      '/api/protected': {
         target: localhost,
         changeOrigin: true
       },
