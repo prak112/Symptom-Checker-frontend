@@ -1,6 +1,6 @@
 // react
-import { useContext, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+// import { useNavigate } from "react-router-dom"
 // component
 import Diagnosis from "./Diagnosis"
 // services
@@ -10,14 +10,8 @@ import { Send } from "@mui/icons-material"
 import { Button, TextField, Box, FormHelperText } from "@mui/material"
 import { FormControl, FormLabel, FormControlLabel, Radio, RadioGroup  } from "@mui/material"
 // context
-import { AuthenticationContext } from '../contexts/AuthenticationContext'
-import { useAlert } from "../contexts/useAlert"
-/**
- * DONE - Add UserContext/AuthenticateUserContext
- * Verify user in handleSubmit and save input to execute after authentication
-    * If un-authenticated, Navigate user to <AuthenticateUser />
-    * If authenticated, Create <UserHistory /> in <Sidebar />
- */
+// import { AuthenticationContext } from '../contexts/AuthenticationContext'
+// import { useAlert } from "../contexts/useAlert"
 
 
 /**
@@ -30,9 +24,9 @@ export default function SymptomForm(){
     const [diagnosis, setDiagnosis] = useState([])
     const [searchType, setSearchType] = useState("general")
     const [analysisType, setAnalysisType] = useState("panel")
-    const navigate = useNavigate()
-    const { isAuthenticated } = useContext(AuthenticationContext)
-    const showAlert = useAlert()
+    // const navigate = useNavigate()
+    // const { isAuthenticated } = useContext(AuthenticationContext)
+    // const showAlert = useAlert()
 
     // styles
     const outerBoxStyle = {
@@ -79,14 +73,6 @@ export default function SymptomForm(){
         console.log('Analysis type: ', analysisType)
     }
 
-    const handleUserVerification = () => {
-        if(!isAuthenticated) {
-            showAlert('User does not exist. Please register to access the service.', 'error')
-            navigate('/auth?public=login');
-        } 
-        console.log('User verification complete')
-    }
-
     // manage symptom form submit to redirect request based on searchType
     const handleSubmit = async(event) => {
         event.preventDefault()
@@ -113,9 +99,15 @@ export default function SymptomForm(){
         }, 2000)    
     }
 
-    // reroute back to SymptomForm
     const returnSymptomForm = () => {
-        setSubmitted(false);
+        // if(!isAuthenticated) {
+        //     showAlert('User does not exist. Please register to access the service.', 'error')
+        //     navigate('/auth?public=login');
+        //     console.log('User redirected to authentication')
+        // } 
+        // else {
+            setSubmitted(false);
+        // }
     }
 
     // render Loading screen - loading true, submitted false
@@ -223,7 +215,6 @@ export default function SymptomForm(){
                         endIcon={<Send />} 
                         variant='outlined' 
                         color='secondary'
-                        onClick={handleUserVerification}
                     >
                         Diagnose
                     </Button>            
