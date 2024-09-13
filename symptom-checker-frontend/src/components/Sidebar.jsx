@@ -67,12 +67,12 @@ export default function Sidebar({ open, toggleDrawer }){
                 )}
                 {/* if user authenticated render 'Profile' else 'Signup/Login' */}
                 {user 
-                ? (<Link to="/profile" style={sidebarStyles.link}>
+                ? (<Link to="/history" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
                         <ListItemIcon>
                             <PermIdentityOutlined />
                         </ListItemIcon>
-                        <ListItemText primary="Profile" />
+                        <ListItemText primary="History" />
                     </ListItemButton>
                     </Link>)
                 : (<Link to="/auth?public=login" style={sidebarStyles.link}>
