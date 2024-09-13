@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const baseUrl = '/api/protected/symptoms'
+const baseUrl = '/api/protected'
 
 // POST - 'General' search result from symptoms lists
 const getGeneralDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(`${baseUrl}/general`, symptoms)
+        const response = await axios.post(`${baseUrl}/symptoms/general`, symptoms)
         return response.data
     } catch (error) {
         console.error('Error during General search : ', error)
@@ -16,7 +16,7 @@ const getGeneralDiagnosis = async(symptoms) => {
 // POST - 'Specific' search result from symptoms lists
 const getSpecificDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(`${baseUrl}/specific`, symptoms)
+        const response = await axios.post(`${baseUrl}/symptoms/specific`, symptoms)
         return response.data
     } catch (error) {
         console.error('Error during Specific search : ', error)
@@ -25,9 +25,9 @@ const getSpecificDiagnosis = async(symptoms) => {
 }
 
 // GET - Get User History
-const getUserHistory = async(userInformation) => {
+const getUserHistory = async() => {
     try {
-        const response = await axios.get(`${baseUrl}/history`, userInformation)
+        const response = await axios.get(`${baseUrl}/users/history`)
         return response.data
     } catch (error) {
         console.error('Error during User History retrieval : ', error)
