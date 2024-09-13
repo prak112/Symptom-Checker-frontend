@@ -27,9 +27,36 @@
 # (issue) Generate User history
 - GitHub Issue [#10](https://github.com/prak112/Symptom-Checker-frontend/issues/10)
 - Components required :
-   - Sidebar route to `<History />` page after Authentication
+   - ~~Sidebar route to `<History />` page after Authentication~~
    - State component to display data retrieved from *diagnoses* collection from MongoDB
    - `useEffect` hook to add searched symptoms into `<History />` page
+
+- The above approach comes with the following complications :
+   - Requires `submitted` state from `<SymptomForm />`
+   - Leads to state drilling through components (`<SymptomForm />` to `<UserHistory />`)
+
+- The possible alternatives are :
+   1. Redux: A popular state management library that allows you to manage the state of your entire application in a single store. Components can connect to the store to read state and dispatch actions.
+
+   2. Recoil: A state management library for React that provides a more fine-grained approach compared to Redux. It allows you to create shared state (atoms) and derived state (selectors) that components can subscribe to.
+
+   3. Event Emitter: Use an event emitter to communicate between components. You can emit events from one component and listen for those events in another component.
+
+   4. React Query: A data-fetching library that can also be used to manage and synchronize state across components. It provides hooks to fetch, cache, and update data.
+
+   5. Custom Hooks: Create custom hooks that encapsulate the shared state and logic. These hooks can be used in multiple components to access and update the shared state.
+
+
+- Using React Query, establish partial communication between `<SymptomForm />` and `<UserHistory />` to :
+   - monitor changes in `submitted` state
+   - execute custom `useUserHistory` hook everytime `submitted` state changes
+
+- React Query approach overview :
+   - React Query Provider: Wraps the application to provide React Query context.
+   - Custom Hook: useUserHistory fetches user history data.
+   - UserHistory Component: Uses useUserHistory to fetch and display user history.
+   - SymptomForm Component: Uses useQueryClient and invalidateQueries to invalidate and refetch the user history query whenever the submitted state changes.
+- This approach ensures that the useUserHistory hook in UserHistory.jsx is executed every time the submitted state changes in SymptomForm.jsx, without the need for state drilling.
 
 
 # (optional) Setup Symptom analysis preference
