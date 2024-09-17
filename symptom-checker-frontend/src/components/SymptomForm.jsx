@@ -1,32 +1,31 @@
 // react
-import { useState } from "react"
-// import { useNavigate } from "react-router-dom"
+import { useContext, useState } from "react"
 // component
 import Diagnosis from "./Diagnosis"
 // services
 import symptomCheckerService from "../services/symptoms"
 // material UI
 import { Send } from "@mui/icons-material"
-import { Button, TextField, Box, FormHelperText } from "@mui/material"
+import { Button, TextField, Box, FormHelperText, CircularProgress, Typography } from "@mui/material"
 import { FormControl, FormLabel, FormControlLabel, Radio, RadioGroup  } from "@mui/material"
+import { List, ListItem, ListItemText } from "@mui/material"
 // context
-// import { AuthenticationContext } from '../contexts/AuthenticationContext'
-// import { useAlert } from "../contexts/useAlert"
+import { SubmitFormContext } from "../contexts/SubmitFormContext"
+import { useNavigate } from "react-router-dom"
 
 
 /**
  * Component for rendering a form to input symptoms and diagnose them.
  */
 export default function SymptomForm(){
+    const { submitted, setSubmitted } = useContext(SubmitFormContext)
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-    const [submitted, setSubmitted] = useState(false)
     const [symptoms, setSymptoms] = useState("")
     const [diagnosis, setDiagnosis] = useState([])
     const [searchType, setSearchType] = useState("general")
     const [analysisType, setAnalysisType] = useState("panel")
-    // const navigate = useNavigate()
-    // const { isAuthenticated } = useContext(AuthenticationContext)
-    // const showAlert = useAlert()
+
 
     // styles
     const outerBoxStyle = {
@@ -48,7 +47,6 @@ export default function SymptomForm(){
         borderRadius: '10px', 
     }
     const centeredDivStyle = {
-        width: "50%",
         paddingTop: "20px",
         margin: "0 auto"
     }
@@ -100,14 +98,7 @@ export default function SymptomForm(){
     }
 
     const returnSymptomForm = () => {
-        // if(!isAuthenticated) {
-        //     showAlert('User does not exist. Please register to access the service.', 'error')
-        //     navigate('/auth?public=login');
-        //     console.log('User redirected to authentication')
-        // } 
-        // else {
-            setSubmitted(false);
-        // }
+        setSubmitted(false);
     }
 
     // render Loading screen - loading true, submitted false
@@ -115,11 +106,54 @@ export default function SymptomForm(){
         return (
         <Box sx={outerBoxStyle}>
             <div style={centeredDivStyle}>
-                <p>Communicating with ICD API...</p>
-                <p>Loading results...</p>
-                <p>Max Waiting Time for <em>&apos;General&apos;</em> search : <em>~12 seconds</em></p>
-                <p>Max Waiting Time for <em>&apos;Specific&apos;</em> search : <em>~1 second</em></p>
+                <Typography variant="h6">Communicating with ICD API...</Typography>
+                <CircularProgress color="secondary" />
+                <Typography variant="body1">Loading results...</Typography>
+                <List>
+                    <Typography variant="body2" gutterBottom sx={{ display: 'block' }}>
+                        Diagnosis ETA :
+                    </Typography>
+                    <ListItem>
+                        <ListItemText 
+                            primary="General-Panel" 
+                            secondary="~30 secs"
+                            primaryTypographyProps={{ variant: "subtitle1" }}
+                            secondaryTypographyProps={{ variant: 'subtitle2' }}
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText 
+                            primary="General-Assessment" 
+                            secondary="~15 secs"
+                            primaryTypographyProps={{ variant: "subtitle1" }}
+                            secondaryTypographyProps={{ variant: 'subtitle2' }}
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText 
+                            primary="Specific-Panel" 
+                            secondary="~1 sec"
+                            primaryTypographyProps={{ variant: "subtitle1" }}
+                            secondaryTypographyProps={{ variant: 'subtitle2' }}                            
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText 
+                            primary="Specific-Assessment" 
+                            secondary="~1 secs"
+                            primaryTypographyProps={{ variant: "subtitle1" }}
+                            secondaryTypographyProps={{ variant: 'subtitle2' }}                        
+                        />
+                    </ListItem>
+                </List>
             </div>
+            <Button
+                onClick={() => navigate('/')} 
+                variant="outlined"
+                color="secondary"             
+            >
+                Cancel
+            </Button>
         </Box>
         )
     }
@@ -162,7 +196,7 @@ export default function SymptomForm(){
                     >
                     <FormControl>
                         <FormLabel id="radio-buttons-group-label">
-                            Choose Symptom Checker type
+                            Choose Symptom diagnosis type
                         </FormLabel>
                         <RadioGroup 
                             row 
@@ -171,16 +205,31 @@ export default function SymptomForm(){
                             onChange={handleSearchType} 
                         >
                             <FormControlLabel 
-                                value="general" control={<Radio />} label="General" />
+                                value="general" 
+                                control={<Radio />} 
+                                label="General"
+                                required 
+                            />
+                            <FormHelperText>
+                            Multiple possible diagnosis.
+                            </FormHelperText>
                             <FormControlLabel 
-                                value="specific" control={<Radio />} label="Specific" required/>
+                                value="specific" 
+                                control={<Radio />} 
+                                label="Specific" 
+                                required 
+                            />
+                            <FormHelperText>
+                            Top scoring diagnosis<strong>
+                                <a title="Score is a value between 0 and 1. Higher the score, better the match."> (calculated by ICD)</a>
+                            </strong>
+                            </FormHelperText>
                         </RadioGroup>
-                        <FormHelperText>
-                            {/* simplify explanation */}
-                            &apos;General&apos; - Multiple possible diagnosis.<br /> 
-                            &apos;Specific&apos; - Top scored diagnosis.
-                            <b><a title="Score is a value between 0 and 1. Higher the score, better the match."> (score calculated by  by ICD)</a></b>
-                        </FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel id="radio-buttons-group-label">
+                            Choose Analysis type
+                        </FormLabel>
                         <RadioGroup 
                             row 
                             name="radio-buttons-group"
@@ -194,6 +243,9 @@ export default function SymptomForm(){
                                 title="For diagnosing multiple symptoms at once" 
                                 required
                             />
+                            <FormHelperText>
+                                <em>Consolidated</em> diagnosis for all symptoms.
+                            </FormHelperText>
                             <FormControlLabel 
                                 value="assessment" 
                                 control={<Radio />} 
@@ -201,24 +253,22 @@ export default function SymptomForm(){
                                 title="For detailed symptom-by-symptom diagnosis " 
                                 required
                             />
+                            <FormHelperText>
+                                <em>Symptom-by-Symptom</em> diagnosis.
+                            </FormHelperText>
                         </RadioGroup>
-                        <FormHelperText>
-                            {/* simplify explanation */}
-                            &apos;Panel&apos; - Single diagnosis for all symptoms.<br />
-                            &apos;Assessment&apos; - Multiple diagnoses for each symptom.
-                        </FormHelperText>
-                    </FormControl>
-                    <Button
-                        display="flex"
-                        direction="row"
-                        type="submit" 
-                        endIcon={<Send />} 
-                        variant='outlined' 
-                        color='secondary'
-                    >
-                        Diagnose
-                    </Button>            
+                    </FormControl>       
                 </Box>
+                <Button
+                    display="flex"
+                    direction="row"
+                    type="submit" 
+                    endIcon={<Send />} 
+                    variant="outlined" 
+                    color="secondary"
+                >
+                    Diagnose
+                </Button>     
             </form>
         </Box>
 
