@@ -1,8 +1,7 @@
 // imports
 // context
-// import { UserProvider } from './contexts/UserContext'
-// import { AlertProvider } from './contexts/AlertContext'
-import { AuthenticationContext, } from './contexts/AuthenticationContext'
+import { SubmitFormProvider } from './contexts/SubmitFormContext.jsx'
+import { AuthenticationContext } from './contexts/AuthenticationContext'
 // components
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
@@ -11,15 +10,16 @@ import Sidebar from './components/Sidebar'
 import SignupModal from './components/modals/Signup'
 import LoginModal from './components/modals/Login'
 import LogoutModal from './components/modals/Logout'
+import AuthenticationPrompt from './components/modals/AuthenticationPrompt'
 // pages
 import Home from './pages/Home'
 import UserHistory from './pages/UserHistory'
+import UserProfile from './pages/UserProfile'
 import FAQ from './pages/Faqs'
 // react
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
-import AuthenticationPrompt from './components/modals/AuthenticationPrompt'
 
 
 /**
@@ -52,22 +52,22 @@ export default function App() {
   useEffect(() => {
     verifyUserAuth()
   }, [isAuthenticated, verifyUserAuth])
- 
-  // const hideAuthPrompt = () => {
-  //   setAuthPromptOpen(!authPromptOpen)
-  // }
+
 
   return (
     <div style={mainDivStyle}>
       <Header toggleDrawer={toggleDrawer}  />
+      <SubmitFormProvider>
       <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
         <Route path="/faqs" element={<FAQ />}/>
         <Route path="/history" element={<UserHistory />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
       </Routes>
+      </SubmitFormProvider> 
       <AuthenticationPrompt open={authPromptOpen} handleClose={verifyUserAuth}/>
     </div>
   )
