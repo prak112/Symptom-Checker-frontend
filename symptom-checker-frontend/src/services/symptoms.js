@@ -28,10 +28,22 @@ const getSpecificDiagnosis = async(symptoms) => {
 const getUserHistory = async() => {
     try {
         const response = await axios.get(`${baseUrl}/users/history`)
+        console.log('User History from Backend : ', response.data)
         return response.data
     } catch (error) {
         console.error('Error during User History retrieval : ', error)
         throw error;
+    }
+}
+
+// DELETE - Remove User History item
+const removeDiagnosisById = async(diagnosisId) => {
+    try {
+        const response = await axios.delete(`${baseUrl}/users/history`, diagnosisId)
+        return response.status
+    } catch (error) {
+        console.error('Error deleting User History item : ', error)
+        throw error;        
     }
 }
 
@@ -40,4 +52,5 @@ export default {
     getSpecificDiagnosis, 
     getGeneralDiagnosis,
     getUserHistory,
+    removeDiagnosisById,
 }
