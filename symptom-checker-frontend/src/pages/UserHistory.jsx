@@ -1,6 +1,8 @@
+// react
+import { useNavigate } from 'react-router-dom';
 // material UI
-import { KeyboardReturnOutlined } from '@mui/icons-material';
-import { Box, FormHelperText, Typography, Button } from '@mui/material'
+import { Delete, KeyboardReturnOutlined } from '@mui/icons-material';
+import { Box, FormHelperText, Typography, Button, IconButton } from '@mui/material'
 import {
     Table,
     TableBody,
@@ -16,7 +18,7 @@ import symptomsService from '../services/symptoms'
 import { SubmitFormContext } from '../contexts/SubmitFormContext'
 import { useState, useContext, useCallback, useEffect } from 'react'
 import { AuthenticationContext } from '../contexts/AuthenticationContext'
-import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../contexts/useAlert';
 
 // styles
 const centeredDivStyle = {
@@ -29,13 +31,17 @@ const centeredDivStyle = {
 }
 
 export default function UserHistory() {
-    const { submitted } = useContext(SubmitFormContext)
+    const { submitted, setSubmitted } = useContext(SubmitFormContext)
     const { isAuthenticated } = useContext(AuthenticationContext)
+    const showAlert = useAlert()
     const [data, setData] = useState([])
     const navigate = useNavigate()
 
     // handle return to Home
-    const returnHome = () => navigate('/')
+    const returnHome = () => {
+        setSubmitted(false)
+        navigate('/')
+    }
 
     // using context and monitoring for changes in submitted state
     const getUserDiagnosis = useCallback(async () => {
@@ -44,10 +50,10 @@ export default function UserHistory() {
     }, [])
 
     useEffect(() => {
-        if(isAuthenticated){ 
-            getUserDiagnosis() 
-        }
-    }, [isAuthenticated, submitted, getUserDiagnosis])
+        if (isAuthenticated) {
+                    getUserDiagnosis() 
+        }    
+   }, [isAuthenticated, submitted, getUserDiagnosis])
 
     // verify empty history data
     if (!data || data.length === 0) {
@@ -65,10 +71,33 @@ export default function UserHistory() {
         return diagnosisItem.diagnosis.map((record) => ({
             symptom: record.symptom,
             analysis: record.analysis.toUpperCase(),
-            diagnosedAt: new Date(record.diagnosedAt).toString(),
+            diagnosedAt: new Date(record.diagnosedAt).toLocaleString(),
             topResult: record.topResult || {},
+            diagnosisId: record._id,
         }))
     })
+    
+    // call delete service function and refresh history
+    const modifyDiagnosisHistory = (diagnosisId) => {
+        if(window.confirm("You cannot undo this action.\nAre you sure you want to delete this diagnosis ?")) {
+            deleteHistoryItem(diagnosisId)        
+            const modifiedData = rows.filter(record => record.diagnosisId !== diagnosisId ? record : null)
+            setData(modifiedData)
+            showAlert('Diagnosis deleted successfully.', 'success')
+        }
+    }    
+    // handle deletion of history records
+    const deleteHistoryItem = async(diagnosisId) => {
+        try {
+            console.log('Deleting diagnosis history item...', diagnosisId)
+            setSubmitted(false)
+            await symptomsService.removeDiagnosisById(diagnosisId)
+        } catch (error) {
+            console.error('Error deleting Diagnosis : ', error);
+            showAlert(`Error deleting Diagnosis : ${error.response.data.error}`, 'error') // error alert
+        }
+    }
+
 
     return(
         <Box sx={centeredDivStyle}>
@@ -82,7 +111,7 @@ export default function UserHistory() {
                 type="submit" 
                 endIcon={<KeyboardReturnOutlined />} 
                 variant="outlined" 
-                color="secondary"
+                color="info"
                 onClick={returnHome}
             >
                 Back
@@ -91,23 +120,23 @@ export default function UserHistory() {
             <Table>
                 <TableHead>
                 <TableRow>
-                    <TableCell sx={{ width: '15%' }}>Symptom</TableCell>
+                    <TableCell sx={{ width: '10%' }}>Symptom</TableCell>
                     <TableCell sx={{ width: '10%' }}>Analysis</TableCell>
-                    <TableCell sx={{ width: '10%' }}>Diagnosed At</TableCell>
+                    <TableCell sx={{ width: '10%' }}>Time</TableCell>
                     <TableCell sx={{ width: '10%' }}>Diagnosis</TableCell>
-                    <TableCell sx={{ width: '10%' }}>Relevance</TableCell>
-                    <TableCell sx={{ width: '40%' }}>Details</TableCell>
+                    <TableCell sx={{ width: '10%' }}>Relevance(%)</TableCell>
+                    <TableCell sx={{ width: '50%' }}>Details</TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                {rows.map((row, index) => (
-                    <TableRow key={index}>
-                        <TableCell sx={{ width: '15%' }}>{row.symptom}</TableCell>
+                {rows.map((row) => (
+                    <TableRow key={row.diagnosisId}>
+                        <TableCell sx={{ width: '10%' }}>{row.symptom}</TableCell>
                         <TableCell sx={{ width: '10%' }}>{row.analysis}</TableCell>
                         <TableCell sx={{ width: '10%' }}>{row.diagnosedAt}</TableCell>
                         <TableCell sx={{ width: '10%' }}>{row.topResult.title}</TableCell>
-                        <TableCell sx={{ width: '10%' }}>{row.topResult.score}%</TableCell>
-                        <TableCell sx={{ width: '40%' }}>
+                        <TableCell sx={{ width: '10%' }}>{row.topResult.score}</TableCell>
+                        <TableCell sx={{ width: '50%' }}>
                             {row.topResult.detail}<br/>
                             {row.topResult.url 
                                 ? ( <a 
@@ -119,6 +148,15 @@ export default function UserHistory() {
                                     </a>
                                 ) : 'No Data Available'
                             }
+                    </TableCell>
+                    <TableCell>
+                        <IconButton 
+                            aria-label="delete"
+                            color="warning"
+                            onClick={() => modifyDiagnosisHistory(row)}
+                        >
+                            <Delete />
+                        </IconButton>
                     </TableCell>
                     </TableRow>
                 ))}
