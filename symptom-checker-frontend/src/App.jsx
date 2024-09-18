@@ -20,6 +20,7 @@ import FAQ from './pages/Faqs'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
+import DisplayDiagnosis from './components/DisplayDiagnosis.jsx'
 
 
 /**
@@ -57,14 +58,15 @@ export default function App() {
   return (
     <div style={mainDivStyle}>
       <Header toggleDrawer={toggleDrawer}  />
-      <SubmitFormProvider>
       <Sidebar open={drawerOpen} toggleDrawer={toggleDrawer} /> 
+      <SubmitFormProvider>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
-        <Route path="/faqs" element={<FAQ />}/>
+        <Route path="/diagnosis" element={<DisplayDiagnosis />} />  {/* To Be Implemented */}
         <Route path="/history" element={<UserHistory />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/faqs" element={<FAQ />}/>
+        <Route path="/auth" element={<ModalWrapper />} /> {/* user not authorized*/}
         <Route path="/auth?public=logout" element={<ModalWrapper />} /> {/* user authorized */} 
       </Routes>
       </SubmitFormProvider> 
