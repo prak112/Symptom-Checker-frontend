@@ -50,6 +50,6 @@ OtherDiagnosis.propTypes = {
         label: PropTypes.array,
         score: PropTypes.array,
         url: PropTypes.array,
-    }).isRequired,
+    }),
     type: PropTypes.string,
 }

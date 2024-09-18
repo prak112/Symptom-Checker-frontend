@@ -85,7 +85,7 @@ export default function AuthenticationPrompt({ open, handleClose }) {
                 color="secondary"
                 onClick={handleRegistration}
             >
-                Sign Me up!
+                Sign up / Login
             </Button>
           </Stack>
           <Divider sx={{ my: 2 }} />
