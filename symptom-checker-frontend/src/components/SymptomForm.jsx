@@ -29,26 +29,6 @@ export default function SymptomForm() {
     const [analysisType, setAnalysisType] = useState("")
 
 
-    // styles - OLD
-    // const outerBoxStyle = {
-    //     display: 'flex',
-    //     flexDirection: 'column',
-    //     justifyContent: 'center',
-    //     margin: 'auto',
-    //     padding: '10px',
-    //     border: '1px solid #ccc',
-    //     borderRadius: '5px',    // rounded corners
-    //     width: '50%',        // container width
-    //     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-    // }
-    // const innerBoxStyle = {
-    //     justifyContent: 'center',
-    //     height: '100%',
-    //     width: '90%', 
-    //     border: '2px solid grey', 
-    //     borderRadius: '10px', 
-    // }
-
     // styles - NEW
     const outerBoxStyle = {
         display: 'flex',
@@ -185,10 +165,6 @@ export default function SymptomForm() {
                 {/* SEARCH and ANALYIS preferences */}
                 <Box
                     my={4}
-                    // display="flex"
-                    // alignItems="center"
-                    // gap={4}
-                    // p={2}
                     sx={innerBoxStyle}
                     >
                     {/* Search preference */}
