@@ -29,24 +29,58 @@ export default function SymptomForm() {
     const [analysisType, setAnalysisType] = useState("")
 
 
-    // styles
+    // styles - OLD
+    // const outerBoxStyle = {
+    //     display: 'flex',
+    //     flexDirection: 'column',
+    //     justifyContent: 'center',
+    //     margin: 'auto',
+    //     padding: '10px',
+    //     border: '1px solid #ccc',
+    //     borderRadius: '5px',    // rounded corners
+    //     width: '50%',        // container width
+    //     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+    // }
+    // const innerBoxStyle = {
+    //     justifyContent: 'center',
+    //     height: '100%',
+    //     width: '90%', 
+    //     border: '2px solid grey', 
+    //     borderRadius: '10px', 
+    // }
+
+    // styles - NEW
     const outerBoxStyle = {
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
         margin: 'auto',
-        padding: '10px',
+        padding: '20px',
         border: '1px solid #ccc',
-        borderRadius: '5px',    // rounded corners
-        width: '50%',        // container width
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+        borderRadius: '5px',
+        width: '100%',
+        maxWidth: '700px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        '@media (min-width: 600px)': {
+            width: '70%',
+        },
+        '@media (min-width: 960px)': {
+            width: '50%',
+        }
     }
+    
     const innerBoxStyle = {
-        height: '100%',
-        width: '90%', 
-        border: '2px solid grey', 
-        borderRadius: '10px', 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '10px',
+        width: '100%',
+        border: '2px solid grey',
+        borderRadius: '10px',
     }
+
 
     // EVENT HANDLERS
     // form-level validation and user-input sanitization
@@ -76,6 +110,8 @@ export default function SymptomForm() {
             analysis: `${searchType}-${analysisType}`
         }
         console.log('Symptoms List : ', symptomsPayload)
+        setAnalysisType("")
+        setSearchType("")
         let diagnosisData = [];
         setLoading(true)
 
@@ -108,7 +144,7 @@ export default function SymptomForm() {
     }
 
     // render Diagnosis
-    if(submitted){ // forward results to <DisplayDiagnosis />
+    if(submitted){ // TO BE IMPLEMENTED - forward results to <DisplayDiagnosis /> 
         console.log('Rendering Diagnosis screen...')
 
         return(
@@ -128,6 +164,9 @@ export default function SymptomForm() {
         // })
     }
 
+    /**
+     * TO BE IMPLEMENTED - <TabPanel />
+     */
     // render Symptom form
     return(        
         <Box sx={outerBoxStyle}>
@@ -143,17 +182,21 @@ export default function SymptomForm() {
                     fullWidth={true}
                     required 
                 />
-                {/* SEARCH, ANALYIS type preferences */}
+                {/* SEARCH and ANALYIS preferences */}
                 <Box
                     my={4}
-                    display="flex"
-                    alignItems="center"
-                    gap={4}
-                    p={2}
+                    // display="flex"
+                    // alignItems="center"
+                    // gap={4}
+                    // p={2}
                     sx={innerBoxStyle}
                     >
-                    <FormControl>
-                        <FormLabel id="radio-buttons-group-label">
+                    {/* Search preference */}
+                    <FormControl px={4}>
+                        <FormLabel 
+                            id="search-type-radio-group"
+                            sx={{ color: 'InfoText' }}
+                        >
                             Choose Search type
                         </FormLabel>
                         <RadioGroup 
@@ -162,30 +205,61 @@ export default function SymptomForm() {
                             onChange={handleSearchType}
                             required 
                         >
+                        <Box 
+                            display="flex" 
+                            flexDirection="column" 
+                            alignItems="flex-start"
+                        >
                             <FormControlLabel 
                                 value="general" 
                                 control={<Radio />} 
-                                label="General" 
+                                label="General"
+                                sx={{ color: 'MenuText' }}
+                                required 
                             />
-                            <FormHelperText>
-                            Multiple possible diagnosis.
+                            <FormHelperText 
+                                sx={{ color: 'CaptionText' }}
+                            >
+                                Multiple possible diagnosis
                             </FormHelperText>
-                            <FormControlLabel 
+                        </Box>
+                        <Box
+                            display="flex" 
+                            flexDirection="column" 
+                            alignItems="flex-start"
+                        >        
+                            <FormControlLabel
                                 value="specific" 
                                 control={<Radio />} 
-                                label="Specific" 
+                                label="Specific"
+                                sx={{ color: 'MenuText' }}
+                                required 
                             />
-                            <FormHelperText>
+                            <FormHelperText
+                                sx={{ color: 'CaptionText' }}
+                            >
                             Top scoring diagnosis<strong>
                                 <a title="Score is a value between 0 and 1. 
                                     Higher the score, better the match."
                                 > (calculated by ICD)</a>
                             </strong>
                             </FormHelperText>
+                        </Box>
                         </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel id="radio-buttons-group-label">
+                    
+                    {/* padding box */}
+                    <Box                
+                        display="flex" 
+                        flexDirection="column" 
+                        alignItems="flex-start"
+                        p={2}
+                    />
+
+                    {/* Analysis preference */}
+                        <FormLabel 
+                            id="analysis-type-radio-group"
+                            sx={{ color: 'InfoText' }}
+                        >
                             Choose Analysis type
                         </FormLabel>
                         <RadioGroup 
@@ -194,27 +268,49 @@ export default function SymptomForm() {
                             onChange={handleAnalysisType}
                             required 
                         >
+                        <Box                
+                            display="flex" 
+                            flexDirection="column" 
+                            alignItems="flex-start"
+                        >
                             <FormControlLabel 
                                 value="panel" 
                                 control={<Radio />} 
                                 label="Panel"
-                                title="For diagnosing multiple symptoms at once" 
+                                title="For diagnosing multiple symptoms at once"
+                                sx={{ color: 'MenuText' }}
+                                required  
                             />
-                            <FormHelperText>
-                                <em>Consolidated</em> diagnosis for all symptoms.
+                            <FormHelperText
+                                sx={{ color: 'CaptionText' }}
+                            >
+                                <em>Consolidated</em> diagnosis
                             </FormHelperText>
+                        </Box>
+                        <Box
+                            display="flex" 
+                            flexDirection="column" 
+                            alignItems="flex-start"
+                        >
                             <FormControlLabel 
                                 value="assessment" 
                                 control={<Radio />} 
                                 label="Assessment"
-                                title="For detailed symptom-by-symptom diagnosis " 
+                                title="For detailed symptom-by-symptom diagnosis"
+                                sx={{ color: 'MenuText' }}
+                                required  
                             />
-                            <FormHelperText>
-                                <em>Symptom-by-Symptom</em> diagnosis.
+                            <FormHelperText
+                                sx={{ color: 'CaptionText' }}
+                            >
+                                <em>Symptom-by-Symptom</em> diagnosis
                             </FormHelperText>
+                        </Box>                            
                         </RadioGroup>
-                    </FormControl>       
+                    </FormControl>
+
                 </Box>
+                {/* Diagnose button */}
                 <Button
                     display="flex"
                     direction="row"
