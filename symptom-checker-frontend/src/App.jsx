@@ -31,7 +31,7 @@ import DisplayDiagnosis from './components/DisplayDiagnosis.jsx'
 export default function App() {
   // styles
   const mainDivStyle = {
-    minHeight: 'calc(100vh - 16vh)',
+    minHeight: 'calc(100vh - 14vh)',
   }
 
   // setup state and context
