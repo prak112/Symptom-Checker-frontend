@@ -1,8 +1,9 @@
 // react
 import { useNavigate } from 'react-router-dom';
 // material UI
-import { Delete, KeyboardReturnOutlined } from '@mui/icons-material';
-import { Box, FormHelperText, Typography, Button, IconButton } from '@mui/material'
+import { KeyboardReturnOutlined } from '@mui/icons-material';
+import { Box, FormHelperText, Typography, Button, } from '@mui/material'
+// IconButton, Delete - TO BE IMPLEMENTED
 import {
     Table,
     TableBody,
@@ -18,7 +19,7 @@ import symptomsService from '../services/symptoms'
 import { SubmitFormContext } from '../contexts/SubmitFormContext'
 import { useState, useContext, useCallback, useEffect } from 'react'
 import { AuthenticationContext } from '../contexts/AuthenticationContext'
-import { useAlert } from '../contexts/useAlert';
+// import { useAlert } from '../contexts/useAlert';
 
 // styles
 const centeredDivStyle = {
@@ -33,7 +34,7 @@ const centeredDivStyle = {
 export default function UserHistory() {
     const { submitted, setSubmitted } = useContext(SubmitFormContext)
     const { isAuthenticated } = useContext(AuthenticationContext)
-    const showAlert = useAlert()
+    // const showAlert = useAlert()
     const [data, setData] = useState([])
     const navigate = useNavigate()
 
@@ -77,26 +78,30 @@ export default function UserHistory() {
         }))
     })
     
-    // call delete service function and refresh history
-    const modifyDiagnosisHistory = (diagnosisId) => {
-        if(window.confirm("You cannot undo this action.\nAre you sure you want to delete this diagnosis ?")) {
-            deleteHistoryItem(diagnosisId)        
-            const modifiedData = rows.filter(record => record.diagnosisId !== diagnosisId ? record : null)
-            setData(modifiedData)
-            showAlert('Diagnosis deleted successfully.', 'success')
-        }
-    }    
-    // handle deletion of history records
-    const deleteHistoryItem = async(diagnosisId) => {
-        try {
-            console.log('Deleting diagnosis history item...', diagnosisId)
-            setSubmitted(false)
-            await symptomsService.removeDiagnosisById(diagnosisId)
-        } catch (error) {
-            console.error('Error deleting Diagnosis : ', error);
-            showAlert(`Error deleting Diagnosis : ${error.response.data.error}`, 'error') // error alert
-        }
-    }
+/**
+ * TO BE IMPLEMENTED - User History delete functionality
+ */
+
+    // // call delete service function and refresh history
+    // const modifyDiagnosisHistory = (diagnosisId) => {
+    //     if(window.confirm("You cannot undo this action.\nAre you sure you want to delete this diagnosis ?")) {
+    //         deleteHistoryItem(diagnosisId)        
+    //         const modifiedData = rows.filter(record => record.diagnosisId !== diagnosisId ? record : null)
+    //         setData(modifiedData)
+    //         showAlert('Diagnosis deleted successfully.', 'success')
+    //     }
+    // }    
+    // // handle deletion of history records
+    // const deleteHistoryItem = async(diagnosisId) => {
+    //     try {
+    //         console.log('Deleting diagnosis history item...', diagnosisId)
+    //         setSubmitted(false)
+    //         await symptomsService.removeDiagnosisById(diagnosisId)
+    //     } catch (error) {
+    //         console.error('Error deleting Diagnosis : ', error);
+    //         showAlert(`Error deleting Diagnosis : ${error.response.data.error}`, 'error') // error alert
+    //     }
+    // }
 
 
     return(
@@ -149,6 +154,8 @@ export default function UserHistory() {
                                 ) : 'No Data Available'
                             }
                     </TableCell>
+                    {/* TO BE IMPLEMENTED - User History delete functionality
+
                     <TableCell>
                         <IconButton 
                             aria-label="delete"
@@ -157,7 +164,7 @@ export default function UserHistory() {
                         >
                             <Delete />
                         </IconButton>
-                    </TableCell>
+                    </TableCell> */}
                     </TableRow>
                 ))}
                 </TableBody>
