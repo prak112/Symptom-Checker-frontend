@@ -2,22 +2,24 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
-import { UserContext } from '../contexts/UserContext'
+import { useLocation } from 'react-router-dom'
 // materialUI 
-import { 
-    Drawer, List, ListItemButton, ListItemIcon, ListItemText 
-} from '@mui/material'
-import { 
-    ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark 
-} from '@mui/icons-material'
-import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import { Avatar, Drawer, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } 
+from '@mui/material'
+import { ExitToAppOutlined, HomeOutlined, AppRegistrationOutlined, QuestionMark, PermIdentityOutlined } 
+from '@mui/icons-material'
+// context
+import { UserContext } from '../contexts/UserContext'
 // resources
 import Logo from '../assets/logo.svg'
 
 
 export default function Sidebar({ open, toggleDrawer }){    
-    // get user info
+    // setup context and location
     const { user } = useContext(UserContext)
+    const location = useLocation()
+
+    // styles
     const sidebarStyles = {
         drawer: {
             background: 'linear-gradient(to right, #A3D1CC, #536B68)',
@@ -51,53 +53,64 @@ export default function Sidebar({ open, toggleDrawer }){
             <List sx={sidebarStyles.list}>
                 <ListItemIcon sx={sidebarStyles.logo}>
                     <img src={Logo} alt='Logo' 
-                    width={60} height={60} 
+                        width={100} height={100} 
                     />
                 </ListItemIcon>
-                <Link to="/" style={sidebarStyles.link}>
-                    <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <HomeOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary="Home" />
-                    </ListItemButton>
-                </Link>
-                {/* if user authenticated render 'Profile' else 'Signup/Login' */}
+                {location.pathname !== '/' && (
+                    <Link to="/" style={sidebarStyles.link}>
+                        <ListItemButton sx={sidebarStyles.listItemButton}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <HomeOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Home" secondary="Symptom search window" />
+                        </ListItemButton>
+                    </Link>
+                )}
+                {/* if user authenticated render 'History' else 'Signup/Login' */}
                 {user 
-                ? (<Link to="/profile" style={sidebarStyles.link}>
+                ? (<Link to="/history" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <PermIdentityOutlinedIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Profile" />
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PermIdentityOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                        <ListItemText primary="History" secondary="Short-term (Guests) / Long-term (Registered Users)" />
                     </ListItemButton>
                     </Link>)
-                : (<Link to="/auth" style={sidebarStyles.link}>
+                : (<Link to="/auth?public=login" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <AppRegistrationOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary="Sign up/Login" />
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <AppRegistrationOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                        <ListItemText primary="Login" />
                     </ListItemButton>
                     </Link>)
                 }
                 <Link to="/faqs" style={sidebarStyles.link}>
                     <ListItemButton sx={sidebarStyles.listItemButton}>
-                        <ListItemIcon>
-                            <QuestionMark />
-                        </ListItemIcon>
-                        <ListItemText primary="FAQs" />
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <QuestionMark />
+                                </Avatar>
+                            </ListItemAvatar>
+                        <ListItemText primary="FAQs" secondary="Clarify yourself about our services"/>
                     </ListItemButton>
                 </Link>
                 {/* if user authenticated render 'Logout' */}
                 {user 
-                ? (
-                    <Link to="/auth?public=logout" style={sidebarStyles.link}>
+                ? (<Link to="/auth?public=logout" style={sidebarStyles.link}>
                         <ListItemButton sx={sidebarStyles.listItemButton}>
-                            <ListItemIcon>
-                                <ExitToAppOutlined />
-                            </ListItemIcon>
-                            <ListItemText primary="Logout" />
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <ExitToAppOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Logout" secondary="Exit the service"/>
                         </ListItemButton>
                     </Link>)
                 : null}

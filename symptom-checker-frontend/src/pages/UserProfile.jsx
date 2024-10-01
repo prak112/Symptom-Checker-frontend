@@ -1,19 +1,48 @@
-// import PropTypes from 'prop-types'
-import { useContext } from 'react'
-import { UserContext } from '../contexts/UserContext'
+// react
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
+// material UI
+import { Typography, Button } from '@mui/material';
+import { KeyboardReturnRounded } from '@mui/icons-material';
 
-export default function UserProfile(){
-    // get user info
-    const { user } = useContext(UserContext)
+
+export default function UserProfile() {
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate()
+
+    // styles
     const centeredDivStyle = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
         width: "50%",
-        paddingTop: "20px",
-        margin: "0 auto"
+        paddingTop: "100px",
+        margin: "auto"
     }
-    return(
+
+    // Check if user is null or undefined
+    if (!user) {
+        return <Typography variant="h5">Loading...</Typography>;
+    }
+
+    return (
         <div style={centeredDivStyle}>
-        <h3>{user}`s Profile</h3>
-            ...coming soon...
+            <Typography variant="h5">User Information</Typography>
+            <Typography variant="subtitle1">
+                Username : {user ? user.toUpperCase() : 'N/A'}
+            </Typography>
+            <Typography variant="subtitle2">
+                Using since : {user.registrationTime ? user.registrationTime : 'N/A'}
+            </Typography>
+            <Button 
+                color="info"
+                variant="outlined" 
+                endIcon={<KeyboardReturnRounded />}
+                onClick={() => navigate('/')}
+            >
+                Back
+            </Button>
         </div>
     )
 }

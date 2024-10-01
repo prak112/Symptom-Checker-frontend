@@ -1,8 +1,8 @@
 // materialUI
-import { Box, Button, Modal, Typography, Divider } from '@mui/material'
+import { Box, Button, Modal, Stack, Typography, Divider } from '@mui/material'
 import { TextField, FormControlLabel, Checkbox, FormHelperText 
 } from '@mui/material'
-import { LoginOutlined } from '@mui/icons-material'
+import { HowToReg, LoginOutlined } from '@mui/icons-material'
 import EnhancedEncryptionOutlined from '@mui/icons-material/EnhancedEncryptionOutlined';
 // react
 import PropTypes from 'prop-types'
@@ -10,11 +10,12 @@ import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 // resources
 import Copyright from '../Copyright';
-import authServices from '../../services/auth'
+// import authServices from '../../services/auth'
 import Logo from '../../assets/logo.svg'
 // context
-import { UserContext } from '../../contexts/UserContext'
-import { useAlert } from '../../contexts/useAlert';
+// import { UserContext } from '../../contexts/UserContext'
+// import { useAlert } from '../../contexts/useAlert';
+import { AuthenticationContext } from '../../contexts/AuthenticationContext';
 
 // styles
 const boxStyle = {
@@ -58,36 +59,57 @@ const modalStyle = {
  */
 export default function LoginModal({ open, handleClose }){
     // setup states
-    const [username, setUsername] = useState(null)
-    const [password, setPassword] = useState(null)
+    // const [username, setUsername] = useState(null)
+    // const [password, setPassword] = useState(null)
+    const [credentials, setCredentials] = useState({ username: '', password: '' })
     const [showPassword, setShowPassword] = useState(true)
     const navigate = useNavigate()
     // setup context
-    const { setUser } = useContext(UserContext)
-    const showAlert = useAlert()
+    // const { setUser } = useContext(UserContext)
+    // const showAlert = useAlert()
+    const { authenticateUser } = useContext(AuthenticationContext)
 
-    // Auth service handler
-    const authenticateUser = async (event) => {
-        event.preventDefault()
-        try {
-            console.log(`Username: ${username}\nPassword: ${password}`)
-            const userInfoPayload = {
-                username: username,
-                password: password
-            }
-            const authorizedUser = await authServices.authenticateUser(userInfoPayload)
-            // store username in sessionStorage for global access 
-            window.sessionStorage.setItem('authenticatedUser', authorizedUser.username)
-            setUser(authorizedUser.username)
-            setUsername(null)
-            setPassword(null)
-            navigate('/')   // redirect to home
-            showAlert('Logged in successfully!', 'success') // success alert
-        } catch (error) {
-            console.error('Error during Login : ', error);
-            showAlert(`Error during Login : ${error.response.data.error}`, 'error') // error alert
-        }
+    // Auth service handler - TO Be Moved to <AuthenticationContext />
+    // const authenticateUser = async (event) => {
+    //     event.preventDefault()
+    //     try {
+    //         console.log(`Username: ${username}\nPassword: ${password}`)
+    //         const userInfoPayload = {
+    //             username: username,
+    //             password: password
+    //         }
+    //         const authorizedUser = await authServices.authenticateUser(userInfoPayload)
+    //         // store username in sessionStorage for global access 
+    //         window.sessionStorage.setItem('authenticatedUser', authorizedUser.username)
+    //         setUser(authorizedUser.username)
+    //         setUsername(null)
+    //         setPassword(null)
+    //         navigate('/')   // redirect to home
+    //         showAlert('Logged in successfully!', 'success') // success alert
+    //     } catch (error) {
+    //         console.error('Error during Login : ', error);
+    //         showAlert(`Error during Login : ${error.response.data.error}`, 'error') // error alert
+    //     }
+    // }
+
+    // Credentials event handler
+    const handleCredentialsChange = (event) => {
+        const { name, value } = event.target
+        setCredentials({ ...credentials, [name]: value })
     }
+
+    // Authentication event handler
+    const handleAuthentication = (event) => {
+        event.preventDefault()
+        authenticateUser(credentials)
+        navigate('/')   // redirect to home
+    }
+
+    // redirect to registration
+    const signupRedirect = () => {
+        navigate('/auth?public=signup')
+    }
+
     
     if(!open) return null;
 
@@ -112,26 +134,30 @@ export default function LoginModal({ open, handleClose }){
                                 Symptom Checker and Triage System
                             </Typography> 
                         </div>
-                        <form onSubmit={authenticateUser} style={formStyle}>
+                        <form onSubmit={handleAuthentication} style={formStyle}>
                             <TextField 
                                 id="username"
+                                name="username"
+                                value={credentials.username}
                                 type="text" 
                                 label="Username"
                                 placeholder="Username" 
                                 variant="outlined"
                                 required
                                 autoComplete="username" // set autocomplete attribute
-                                onChange={(e)=>setUsername(e.target.value)}
+                                onChange={handleCredentialsChange}
                             />
                             <TextField 
                                 id="password"
+                                name="password"
+                                value={credentials.password}
                                 type={showPassword ? "text" : "password"} 
                                 label="Password"
                                 placeholder="Password" 
                                 variant="outlined"
                                 required
                                 autoComplete="current-password" // set autocomplete attribute
-                                onChange={(e)=>setPassword(e.target.value)}
+                                onChange={handleCredentialsChange}
                             />
                             <FormControlLabel
                                 control={
@@ -151,11 +177,25 @@ export default function LoginModal({ open, handleClose }){
                                 type="submit" 
                                 endIcon={<LoginOutlined /> } 
                                 variant="outlined" 
-                                color="secondary"
+                                color="success"
                             >
                                 Login!
                             </Button>
                         </form>
+                        <Divider />
+                        <Stack spacing={2}>
+                            <Typography variant="h6" align="center">
+                                <Divider>Not a User ?</Divider>
+                            </Typography>
+                            <Button 
+                                onClick={signupRedirect} 
+                                endIcon={<HowToReg />} 
+                                variant="outlined" 
+                                color="secondary" 
+                            >
+                                Take me to Registration 
+                            </Button>
+                        </Stack>
                         <Divider />
                         <Copyright />
                     </Box>

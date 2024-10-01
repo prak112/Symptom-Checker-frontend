@@ -17,11 +17,13 @@ export const UserContext = createContext();
  * @returns {JSX.Element} The rendered UserProvider component.
  */
 export function UserProvider({ children }){
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState({username: '', registrationTime: ''})
     // get and store user information
     useEffect(() => {
         const authorizedUser = window.sessionStorage.getItem('authenticatedUser')
-        setUser(authorizedUser)
+        if(authorizedUser) {
+            setUser(JSON.parse(authorizedUser))
+        }
     }, [])
 
     return (

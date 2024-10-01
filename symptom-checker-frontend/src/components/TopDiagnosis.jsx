@@ -9,7 +9,9 @@ export default function TopDiagnosis({ label, score, detail, url }){
     return(
         <Typography gutterBottom variant="h5" component="div">
             <Typography variant="h6" dangerouslySetInnerHTML={{ __html: label }} />
-            <Typography variant="body2" color="primary">{score}%</Typography>
+            <Typography variant="body2" color="primary">{
+                score ? (`${score}%`) : null}
+            </Typography>
             <Typography variant="body2">{detail}</Typography>
             <Button 
                 variant="outlined" 
@@ -24,8 +26,8 @@ export default function TopDiagnosis({ label, score, detail, url }){
 }
 
 TopDiagnosis.propTypes = {
-    label: PropTypes.string.isRequired,
-    score: PropTypes.number.isRequired,
-    detail: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired
+    label: PropTypes.string,
+    score: PropTypes.number,
+    detail: PropTypes.string,
+    url: PropTypes.string
 }

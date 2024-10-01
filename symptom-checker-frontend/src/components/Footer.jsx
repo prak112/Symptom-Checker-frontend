@@ -10,6 +10,7 @@ export default function Footer(){
         left:0,
         bottom:0,
         width: '100%',
+        overflowX: 'hidden',
     }
     return (
         <footer style={footerStyle}>

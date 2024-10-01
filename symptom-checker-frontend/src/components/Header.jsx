@@ -1,14 +1,13 @@
 // react
 import PropTypes from 'prop-types'
-// context
+import { Link } from 'react-router-dom'
 import { useContext } from 'react'
+// context
 import { UserContext } from '../contexts/UserContext';
 // materialUI
-import { AppBar, Toolbar, Typography, IconButton, Avatar } from "@mui/material";
-import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
-import { blue } from '@mui/material/colors';
-import { Link } from 'react-router-dom'
+import { Box, AppBar, Toolbar, Typography, IconButton, Avatar } from "@mui/material";
+import { Menu, PermIdentityOutlined } from '@mui/icons-material';
+import { deepPurple } from '@mui/material/colors';
 // resources
 import Logo from '../assets/logo.svg'
 
@@ -16,16 +15,35 @@ export default function Header({ toggleDrawer }){
     // get user info
     const { user } = useContext(UserContext)
     const appBarStyle = {
+        display: 'flex',
+        margin: '0px auto',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         background: 'linear-gradient(45deg, #FFC107 30%, #FFEB3B 90%)',
-        padding:  '10px',
+        paddingLeft: '25px',
+        paddingRight: '50px', 
+        py: 2,  // padding top, bottom
     }
     const toolBarStyle = {
+        marginLeft: '50px',
+        marginRight: '78px',
         display: 'flex',
-        justifyContent: 'center',
-        paddingRight: '200px',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexDirection: 'row',
     }
-
-    // username to render in <Avatar>
+    const avatarStyle = {
+        marginLeft: '50px',
+        marginRight: '50px',
+        bgcolor: deepPurple['300'],
+    }
+    const imgStyle = {
+        display: 'block',
+        marginLeft: '50px',
+        marginRight: '50px',
+        paddingLeft: '25px',
+        paddingRight: '50px', 
+    }
 
     return(
         <AppBar position="relative" sx={appBarStyle} >
@@ -35,26 +53,36 @@ export default function Header({ toggleDrawer }){
                     color="inherit" 
                     aria-label="menu" 
                     onClick={toggleDrawer}
+                    size="small"
                 >
-                    <MenuIcon fontSize='large' />
+                    <Menu fontSize="large" />
                 </IconButton>
-                <img src={Logo} alt='Logo' 
-                    width={75} height={75} 
-                    style={{paddingRight: '50px', paddingLeft: '25px'}}/> 
+                <Link to="/">
+                    <img src={Logo} alt='Logo' 
+                        width={75} height={75} 
+                        style={imgStyle}
+                    />
+                </Link>
                 <Typography variant="h4" align="center" color="primary">
                     Symptom Checker
-                </Typography>
+                </Typography> 
                 {user 
                 ? (
-                <Link to="/profile">
-                    <Avatar 
-                        sx={{ bgcolor: blue[200] }} 
-                        variant="rounded"
-                        alt={user}
-                    >
-                        <PermIdentityOutlinedIcon />
-                    </Avatar>
-                </Link>
+                <Box
+                    display="flex" 
+                    flexDirection="column" 
+                    alignItems="flex-end"
+                >
+                    <Link to="/profile">
+                        <Avatar 
+                            sx={avatarStyle} 
+                            variant="circular"
+                            alt={user.username}
+                        >
+                            <PermIdentityOutlined fontSize="large" />
+                        </Avatar>
+                    </Link>
+                </Box>
                 )
                 : null}
             </Toolbar>
@@ -64,5 +92,4 @@ export default function Header({ toggleDrawer }){
 
 Header.propTypes = {
     toggleDrawer: PropTypes.func.isRequired,
-    // registeredUser: PropTypes.string,
 }

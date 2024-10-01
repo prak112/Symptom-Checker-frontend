@@ -2,13 +2,23 @@ import axios from 'axios'
 
 const baseUrl = '/public/auth'
 
+// Create guest user
+const createGuestUser = async() => {
+    try {
+        const response = await axios.post(`${baseUrl}/guest`)
+        return response.data
+    } catch (error) {
+        console.error('Error during Guest User registration : ', error)        
+    }
+}
+
 // Signup
 const registerUser = async(userInformation) => {
     try {
         const response = await axios.post(`${baseUrl}/signup`, userInformation)
         return response.data
     } catch(error){
-        console.error('Error during registration: ', error)
+        console.error('Error during User registration: ', error)
         throw error
     }
 }
@@ -19,9 +29,26 @@ const authenticateUser = async(userInformation) => {
         const response = await axios.post(`${baseUrl}/login`, userInformation)
         return response.data
     } catch (error) {
-        console.error('Error during login: ', error)
+        console.error('Error during User login: ', error)
         throw error
     }
 }
 
-export default { registerUser, authenticateUser }
+// Get User History - in services/symptoms.js
+
+// Logout
+const invalidateUserSession = async() => {
+    try {
+        await axios.post(`${baseUrl}/logout`)
+    } catch (error) {
+        console.error('Error during User session invalidation : ', error)
+    }
+}
+
+
+export default {
+    createGuestUser, 
+    registerUser, 
+    authenticateUser,
+    invalidateUserSession,
+}

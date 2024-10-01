@@ -150,3 +150,17 @@
 <hr>
 <br>
 
+# 10 - Frontend : Functions defined inside Component
+- **Context** : 
+    - `useEffect` hook dependency array throw this error - React Hook useEffect has a missing dependency: 'verifyUserAuth'. Either include it or remove the dependency array.
+    - This is implemented so that `<AuthenticationPrompt />` closes once the user is authenticated, which is indicated by `isAuthenticated` value from `AuthenticationContext`
+
+- **Reason** :
+    - `verifyUserAuth` function is defined inside the `<App />` 
+    - Hence, making `verifyUserAuth` a new function on every render. 
+    - `useEffect` hook expects stable dependencies, and since `verifyUserAuth` changes on every render, it should be included in the dependency array.
+
+- **Solution** : 
+    - To fix this, can do either:
+        - Move `verifyUserAuth` function outside the component so it doesn't change on every render.
+        - Use `useCallback` hook to memoize the `verifyUserAuth` function.
