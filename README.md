@@ -1,6 +1,10 @@
 # Overview
 - This repository serves as a Web Client for Symptom Checker application.
-- The Web Client provides a user-friendly UI for users to input their symptoms and receive possible diagnoses based on those symptoms.
+- Web Client is responsible for providing a user-friendly UI for users with :
+  - main screen with input and analysis selection for diagnosing symptoms,
+  - sidebar navigation with access to auth, profile, FAQs and history,
+  - loading screen with approximate response times,
+  - diagnosis screen with summarized display under symptom headings with symptom-relative scoring and further reading redirect URLs.
 - <em>A disclaimer is clear displayed at the footer of the application UI at all times about possible inaccuracies that could be generated.</em>
 
 - Prototype, plan and implementation of the Symptom Checker application are defined in the [prototype README](https://github.com/prak112/ICD11-SymptomChecker#overview)
