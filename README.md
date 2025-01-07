@@ -1,6 +1,7 @@
 # Overview
 - This repository serves as a Web Client for Symptom Checker application.
 - Web Client is responsible for providing a user-friendly UI for users with :
+  - authentication prompt to register as user or guest
   - main screen with input and analysis selection for diagnosing symptoms,
   - sidebar navigation with access to auth, profile, FAQs and history,
   - loading screen with approximate response times,
