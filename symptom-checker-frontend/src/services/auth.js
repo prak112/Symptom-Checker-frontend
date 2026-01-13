@@ -1,6 +1,7 @@
+/* global __API_BASE_URL__ */
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_AUTH || '/public/auth'
+const API_BASE_URL = __API_BASE_URL__ + '/public/auth'
 
 // Create guest user
 const createGuestUser = async() => {

@@ -1,6 +1,7 @@
+/* global __API_BASE_URL__ */
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_SERVICE || '/api/protected'
+const API_BASE_URL = __API_BASE_URL__ + '/api/protected'
 
 // POST - 'General' search result from symptoms lists
 const getGeneralDiagnosis = async(symptoms) => {
