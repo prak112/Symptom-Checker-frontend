@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const baseUrl = '/api/protected'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_SERVICE || '/api/protected'
 
 // POST - 'General' search result from symptoms lists
 const getGeneralDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(`${baseUrl}/symptoms/general`, symptoms)
+        const response = await axios.post(`${API_BASE_URL}/symptoms/general`, symptoms)
         return response.data
     } catch (error) {
         console.error('Error during General search : ', error)
@@ -16,7 +16,7 @@ const getGeneralDiagnosis = async(symptoms) => {
 // POST - 'Specific' search result from symptoms lists
 const getSpecificDiagnosis = async(symptoms) => {
     try {
-        const response = await axios.post(`${baseUrl}/symptoms/specific`, symptoms)
+        const response = await axios.post(`${API_BASE_URL}/symptoms/specific`, symptoms)
         return response.data
     } catch (error) {
         console.error('Error during Specific search : ', error)
@@ -27,7 +27,7 @@ const getSpecificDiagnosis = async(symptoms) => {
 // GET - Get User History
 const getUserHistory = async() => {
     try {
-        const response = await axios.get(`${baseUrl}/users/history`)
+        const response = await axios.get(`${API_BASE_URL}/users/history`)
         console.log('User History from Backend : ', response.data)
         return response.data
     } catch (error) {
@@ -39,7 +39,7 @@ const getUserHistory = async() => {
 // DELETE - Remove User History item
 const removeDiagnosisById = async(diagnosisId) => {
     try {
-        const response = await axios.delete(`${baseUrl}/users/history`, diagnosisId)
+        const response = await axios.delete(`${API_BASE_URL}/users/history`, diagnosisId)
         return response.status
     } catch (error) {
         console.error('Error deleting User History item : ', error)

@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const baseUrl = '/public/auth'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_AUTH || '/public/auth'
 
 // Create guest user
 const createGuestUser = async() => {
     try {
-        const response = await axios.post(`${baseUrl}/guest`)
+        const response = await axios.post(`${API_BASE_URL}/guest`)
         return response.data
     } catch (error) {
         console.error('Error during Guest User registration : ', error)        
@@ -15,7 +15,7 @@ const createGuestUser = async() => {
 // Signup
 const registerUser = async(userInformation) => {
     try {
-        const response = await axios.post(`${baseUrl}/signup`, userInformation)
+        const response = await axios.post(`${API_BASE_URL}/signup`, userInformation)
         return response.data
     } catch(error){
         console.error('Error during User registration: ', error)
@@ -26,7 +26,7 @@ const registerUser = async(userInformation) => {
 // Login
 const authenticateUser = async(userInformation) => {
     try {
-        const response = await axios.post(`${baseUrl}/login`, userInformation)
+        const response = await axios.post(`${API_BASE_URL}/login`, userInformation)
         return response.data
     } catch (error) {
         console.error('Error during User login: ', error)
@@ -39,7 +39,7 @@ const authenticateUser = async(userInformation) => {
 // Logout
 const invalidateUserSession = async() => {
     try {
-        await axios.post(`${baseUrl}/logout`)
+        await axios.post(`${API_BASE_URL}/logout`)
     } catch (error) {
         console.error('Error during User session invalidation : ', error)
     }
