@@ -14,13 +14,13 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     proxy: {
-      //symptoms.js service
-      '/api/protected': {
+      //auth.js service
+      '/public/auth': { 
         target: localhost,
         changeOrigin: true
       },
-      //auth.js service
-      '/public/auth': { 
+      //symptoms.js service
+      '/api/protected': {
         target: localhost,
         changeOrigin: true
       }
