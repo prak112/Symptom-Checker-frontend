@@ -64,7 +64,7 @@ export default function SignupModal({ open, handleClose }) {
     // const [username, setUsername] = useState(null)
     // const [password, setPassword] = useState(null)
     const [credentials, setCredentials] = useState({ username: '', password: '' })
-    const [showPassword, setShowPassword] = useState(true)
+    const [showPassword, setShowPassword] = useState(false)
     
     // setup context
     // const showAlert = useAlert()

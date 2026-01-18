@@ -62,7 +62,7 @@ export default function LoginModal({ open, handleClose }){
     // const [username, setUsername] = useState(null)
     // const [password, setPassword] = useState(null)
     const [credentials, setCredentials] = useState({ username: '', password: '' })
-    const [showPassword, setShowPassword] = useState(true)
+    const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
     // setup context
     // const { setUser } = useContext(UserContext)
