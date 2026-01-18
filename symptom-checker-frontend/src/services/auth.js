@@ -1,6 +1,8 @@
 /* global __API_BASE_URL__ */
 import axios from 'axios'
+axios.defaults.withCredentials = true
 
+// export const API_BASE_URL = import.meta.env.VITE_API_AUTH
 const API_BASE_URL = __API_BASE_URL__ + '/public/auth'
 
 // Create guest user
