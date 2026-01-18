@@ -1,10 +1,11 @@
 # Features:
 - [X] [Guest user creation and authentication](#debug-guest-user-creation-and-authentication)
-- [ ] [Generate User history](#issue-generate-user-history)
-- [ ] [Setup Symptom analysis preference](#optional-setup-symptom-analysis-preference)
-- [ ] [Clear commented out code](#essential-clear-commented-out-code)
+- [X] [Generate User history](#issue-generate-user-history)
+- [X] [Setup Symptom analysis preference](#optional-setup-symptom-analysis-preference)
+- [X] [Clear commented out code](#essential-clear-commented-out-code)
 - [ ] [Generate inputs as badges](#optional-generate-inputs-as-badges)
 - [ ] [Setup Frontend tests](#essential-setup-frontend-tests-using-jest)
+- [ ] [Authenticated Users not recognised from Session Storage data](#debug-update-authcontext-to-use-sessionstorage)
 
 <hr>
 <hr>
@@ -23,6 +24,7 @@
    - user authentication
    - frontend service requests
 
+[Back to TODO log](#features)
 
 # (issue) Generate User history
 - GitHub Issue [#10](https://github.com/prak112/Symptom-Checker-frontend/issues/10)
@@ -63,17 +65,24 @@
 - *React Query* **approach** : Complex to handle without fundamentals to start with.
 - *React Context* **approach** : Implemented with previous references to `AuthenticationContext`
 
+[Back to TODO log](#features)
+
 
 # (optional) Setup Symptom analysis preference
 - Setup radio buttons in `<SymptomForm />` to register user's preference for :
    - symptom-by-symptom diagnosis
    - combined symptoms diagnosis
 - Capture preference by state variables, similar to `searchType`
-- Redirect requests with preference (TODO - setup backend for processing)
+- Redirect requests with preference (setup backend for processing)
+
+[Back to TODO log](#features)
 
 
 # (essential) Clear commented out code
 - Before closing issue with PR
+
+[Back to TODO log](#features)
+
 
 # (optional) Generate inputs as badges
 - To generate badges for entered user input in text format in `<SymptomForm />` :
@@ -97,6 +106,8 @@
                ...
             ...
    ```
+
+[Back to TODO log](#features)
 
 
 # (essential) Setup Frontend tests using `jest`
@@ -157,3 +168,14 @@
    ```sh
       npm test
    ```
+
+[Back to TODO log](#features)
+
+
+# (debug) Update AuthContext to use SessionStorage
+- `authenticatedUser` data is stored in Session Storage of the browser by `UserContext.jsx`
+- This data is not used by `AuthenticationContext.jsx`.
+- Due to this after every app reload, during the same session, the `AuthenticationPrompt.jsx` pops up and asks the user to login again.
+- This is ineffecient and can be handled by using Session Storage data at the right places.
+
+[Back to TODO log](#features)

@@ -22,7 +22,7 @@ export function UserProvider({ children }){
     useEffect(() => {
         const authorizedUser = window.sessionStorage.getItem('authenticatedUser')
         if(authorizedUser) {
-            setUser(JSON.parse(authorizedUser))
+            setUser(authorizedUser)
         }
     }, [])
 

@@ -43,9 +43,7 @@ export function AuthenticationProvider({ children }) {
     // user registration (signup)
     const registerUser = async (credentials) => {
         try {
-            console.log(`Username: ${credentials.username}\nPassword: ${credentials.password}`)
             const registeredUser = await authServices.registerUser(credentials)
-            console.log('RESULT: ', registeredUser)
             setUser(registeredUser)
             //loginRedirect() // after successful registration
             showAlert('Signed up successfully!', 'success') // success alert
@@ -59,9 +57,7 @@ export function AuthenticationProvider({ children }) {
     // user authentication (login)
     const authenticateUser = async(credentials) => {
         try {
-            console.log(`Username: ${credentials.username}\nPassword: ${credentials.password}`)
             const authorizedUser = await authServices.authenticateUser(credentials)
-            console.log('Authenticated user id : ', authorizedUser)
             // store username in sessionStorage for global access 
             window.sessionStorage.setItem('authenticatedUser', authorizedUser.username)
             setUser(authorizedUser.username)
