@@ -164,3 +164,32 @@
     - To fix this, can do either:
         - Move `verifyUserAuth` function outside the component so it doesn't change on every render.
         - Use `useCallback` hook to memoize the `verifyUserAuth` function.
+
+<hr>
+<br>
+
+# 11 - Deployment : Route `/api/protected` and `/public/auth` in production for a Static Frontend
+- **Context**:
+    - `vite.config.js` has proxy servers configured for development mode to route services to the backend.
+    - During deployment, the entire frontend is converted into a production build where the react functionality is converted into static code based on the `build` parameters specified in the `vite.config.js`
+    - Current problem during deployment remains - how do I route the endpoints to communicate with backend as expected during production?
+    - It is a full-cirle as noted in the [1st debug log](#1---missing-communication-link-between-frontend-and-backend). However the issue exists now in production environment.
+
+- **Reason**:
+    - Backend uses nested routers and async handlers.
+    - If any of those throw or return early before CORS is applied, the response will not include CORS headers.
+    - This is the most common failure pattern with Render + Express.
+    - *Backend response*: succesful user creation request (200) - "POST /public/auth/guest 200 182.489 ms - 100" 
+    - *Frontend response*: https://symptomdiagnosis-api.onrender.com/public/auth/guest' from origin 'http://localhost:4173' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+    - **NOT a CORS issue. Definitely a routing issue in frontend config**, *vite.config.js* and related service handlers.
+
+- **Solution**:
+    - Backend is responding without CORS headers hence the frontend does not understand the response without a proper CORS header.
+    - CORS headers have been omitted in Render Backend's responses.
+    - To prevent this a same-origin access for both frontend and backend would prevent CORS issues.
+    - Nginx proxy server is the best option. (check backend for more details)
+    - Nginx acts as an intermediary between both frontend and backend and forces CORS headers in every backend response.
+    - Authentication successful. JWT is not communicated during backend endpoint call for diagnosis.
+    - Add `axios.defaults.withCredentials = true` in both service handlers to ensure JWT use for endpoint calls.
+
+
