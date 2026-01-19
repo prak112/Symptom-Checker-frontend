@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react-swc'
 
 // https://vitejs.dev/config/
 const localhost = 'http://localhost:3003'
-const prodApiUrl = 'https://symptomdiagnosis-api.onrender.com'
+// const prodApiUrl = 'https://symptomdiagnosis-api.onrender.com'
+const prodApiUrl = 'https://symptom-checker-backend-xkxy.onrender.com'
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
